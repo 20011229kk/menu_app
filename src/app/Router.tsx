@@ -18,6 +18,7 @@ export function AppRouter() {
           <Route index element={<HomePage />} />
           <Route path="categories" element={<CategoryListPage />} />
           <Route path="dishes" element={<DishListPage />} />
+          <Route path="dishes/new" element={<DishEditPage />} />
           <Route path="dishes/:dishId" element={<DishDetailPage />} />
           <Route path="dishes/:dishId/edit" element={<DishEditPage />} />
           <Route path="menus" element={<MenuListPage />} />

@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import '../App.css'
 
 const navItems = [
@@ -10,6 +10,7 @@ const navItems = [
 ]
 
 export function AppLayout() {
+  const navigate = useNavigate()
   return (
     <div className="app-shell">
       <header className="app-header">
@@ -17,7 +18,11 @@ export function AppLayout() {
           <div className="app-title">菜单/菜谱管理</div>
           <div className="app-subtitle">离线优先 · 轻量快捷</div>
         </div>
-        <button className="primary-button" type="button">
+        <button
+          className="primary-button"
+          type="button"
+          onClick={() => navigate('/dishes/new')}
+        >
           新增
         </button>
       </header>

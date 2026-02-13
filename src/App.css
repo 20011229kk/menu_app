@@ -123,6 +123,23 @@ body {
   gap: 6px;
 }
 
+.empty {
+  padding: 12px;
+  color: #7a6a55;
+}
+
+.muted {
+  color: #7a6a55;
+  font-size: 13px;
+}
+
+.inline-input {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #e3d3bc;
+}
+
 .list {
   list-style: none;
   padding: 0;
@@ -164,7 +181,17 @@ body {
   padding: 8px 10px;
 }
 
+.segmented-active {
+  background: #f3e0c5;
+  border-color: #d6b98b;
+}
+
 .form {
+  display: grid;
+  gap: 12px;
+}
+
+.field-grid {
   display: grid;
   gap: 12px;
 }
@@ -177,10 +204,43 @@ body {
 }
 
 .field input,
-.field select {
+.field select,
+.field textarea {
   padding: 10px 12px;
   border-radius: 12px;
   border: 1px solid #e3d3bc;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.inline-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.step-row {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.step-index {
+  text-align: center;
+  font-weight: 600;
+  color: #5a4f3f;
+}
+
+.actions-inline {
+  margin-top: 8px;
 }
 
 .primary-button {
@@ -200,6 +260,20 @@ body {
   border-radius: 999px;
 }
 
+.ghost-button.danger {
+  border-color: #e8c2c2;
+  color: #8f2a2a;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 @media (min-width: 768px) {
   .app-main {
     padding: 24px 80px 100px;
@@ -216,5 +290,17 @@ body {
 
   .search-input {
     max-width: 360px;
+  }
+
+  .field-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .inline-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+  }
+
+  .step-row {
+    grid-template-columns: 32px 1fr 120px auto auto auto;
   }
 }
