@@ -17,6 +17,34 @@
     "backgroundTextStyle": "light",
     "backgroundColor": "#f7f2ea"
   },
+  "tabBar": {
+    "color": "#7a6a55",
+    "selectedColor": "#3b2c1a",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/categories/categories",
+        "text": "分类"
+      },
+      {
+        "pagePath": "pages/dishes/dishes",
+        "text": "菜品"
+      },
+      {
+        "pagePath": "pages/menus/menus",
+        "text": "菜单"
+      },
+      {
+        "pagePath": "pages/settings/settings",
+        "text": "设置"
+      }
+    ]
+  },
   "style": "v2",
   "sitemapLocation": "sitemap.json"
 }

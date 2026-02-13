@@ -50,19 +50,19 @@ Page({
   },
 
   goToCategories() {
-    wx.navigateTo({ url: '/pages/categories/categories' })
+    wx.switchTab({ url: '/pages/categories/categories' })
   },
 
   goToDishes() {
-    wx.navigateTo({ url: '/pages/dishes/dishes' })
+    wx.switchTab({ url: '/pages/dishes/dishes' })
   },
 
   goToMenus() {
-    wx.navigateTo({ url: '/pages/menus/menus' })
+    wx.switchTab({ url: '/pages/menus/menus' })
   },
 
   goToSettings() {
-    wx.navigateTo({ url: '/pages/settings/settings' })
+    wx.switchTab({ url: '/pages/settings/settings' })
   },
 
   goToDishDetail(event) {
