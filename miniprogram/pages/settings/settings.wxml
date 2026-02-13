@@ -1,9 +1,4 @@
 <view class="container">
-  <view class="hero">
-    <view class="hero-title">设置</view>
-    <view class="hero-subtitle">管理备份与本地展示图片。</view>
-  </view>
-
   <view class="card">
     <view class="section-title">这是我们的菜单</view>
     <view class="muted">这是我们的菜单</view>
@@ -23,7 +18,7 @@
   </view>
 
   <view class="card">
-    <view class="section-title">同步（情侣共享）</view>
+    <view class="section-title">共享设置</view>
     <view class="row">
       <view class="muted">启用云同步</view>
       <switch checked="{{syncEnabled}}" bindchange="toggleSync" />
