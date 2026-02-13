@@ -3,13 +3,16 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useCategoryStore } from '../../stores/categoryStore'
 import { useDishStore } from '../../stores/dishStore'
 import { matchesDish } from '../../utils/search'
-import { sortCategories } from '../../utils/sort'
+import { sortCategories, sortDishes } from '../../utils/sort'
+import { addRecentSearch, clearRecentSearches, getRecentSearches } from '../../utils/recentSearch'
 
 export function DishListPage() {
   const navigate = useNavigate()
   const { categories, load: loadCategories } = useCategoryStore()
   const { dishes, load: loadDishes, sorted } = useDishStore()
   const [query, setQuery] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [recentSearches, setRecentSearches] = useState<string[]>([])
   const [sortMode, setSortMode] = useState<'name' | 'updatedAt'>('name')
 
   useEffect(() => {
@@ -17,21 +20,20 @@ export function DishListPage() {
     void loadDishes()
   }, [loadCategories, loadDishes])
 
-  const grouped = useMemo(() => {
+  useEffect(() => {
+    setRecentSearches(getRecentSearches())
+  }, [])
+
+  const filteredDishes = useMemo(() => {
     const filtered = dishes.filter((dish) => matchesDish(dish, query))
-    const categoryMap = new Map<string, string>()
-    for (const category of categories) {
-      categoryMap.set(category.id, category.name)
+    if (selectedCategory === 'all') {
+      return filtered
     }
-    const buckets = new Map<string, typeof filtered>()
-    for (const dish of filtered) {
-      const key = dish.categoryId ?? 'uncategorized'
-      const list = buckets.get(key) ?? []
-      list.push(dish)
-      buckets.set(key, list)
+    if (selectedCategory === 'uncategorized') {
+      return filtered.filter((dish) => !dish.categoryId)
     }
-    return { buckets, categoryMap }
-  }, [categories, dishes, query])
+    return filtered.filter((dish) => dish.categoryId === selectedCategory)
+  }, [dishes, query, selectedCategory])
 
   const sortedCategories = sortCategories(categories, 'order')
 
@@ -48,7 +50,24 @@ export function DishListPage() {
           placeholder="搜索菜名/描述/用料"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
+          onBlur={() => {
+            if (!query.trim()) return
+            setRecentSearches(addRecentSearch(query))
+          }}
         />
+        <select
+          className="select-input"
+          value={selectedCategory}
+          onChange={(event) => setSelectedCategory(event.target.value)}
+        >
+          <option value="all">全部分类</option>
+          {sortedCategories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+          <option value="uncategorized">未分类</option>
+        </select>
         <div className="segmented">
           <button
             className={`segmented-button${sortMode === 'name' ? ' segmented-active' : ''}`}
@@ -70,39 +89,88 @@ export function DishListPage() {
         </button>
       </div>
 
-      {sortedCategories.map((category) => {
-        const list = grouped.buckets.get(category.id) ?? []
-        if (list.length === 0) return null
-        return (
-          <div className="card" key={category.id}>
-            <h3>{category.name}</h3>
+      {filteredDishes.length === 0 && <div className="empty">暂无匹配菜品</div>}
+
+      {recentSearches.length > 0 && (
+        <div className="card">
+          <div className="section-header">
+            <h3>最近搜索</h3>
+            <button
+              className="ghost-button"
+              type="button"
+              onClick={() => {
+                clearRecentSearches()
+                setRecentSearches([])
+              }}
+            >
+              清空
+            </button>
+          </div>
+          <div className="chip-row">
+            {recentSearches.map((item) => (
+              <button
+                className="chip"
+                type="button"
+                key={item}
+                onClick={() => setQuery(item)}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {selectedCategory === 'all' && (
+        <>
+          {sortedCategories.map((category) => {
+            const list = filteredDishes.filter((dish) => dish.categoryId === category.id)
+            if (list.length === 0) return null
+            return (
+              <div className="card" key={category.id}>
+                <h3>{category.name}</h3>
+                <ul className="list">
+                  {sortDishes(list, sortMode).map((dish) => (
+                    <li className="list-item" key={dish.id}>
+                      <Link to={`/dishes/${dish.id}`}>{dish.name}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          })}
+          <div className="card">
+            <h3>未分类</h3>
             <ul className="list">
-              {sorted(sortMode)
-                .filter((dish) => dish.categoryId === category.id)
-                .filter((dish) => matchesDish(dish, query))
-                .map((dish) => (
-                  <li className="list-item" key={dish.id}>
-                    <Link to={`/dishes/${dish.id}`}>{dish.name}</Link>
-                  </li>
-                ))}
+              {sortDishes(
+                filteredDishes.filter((dish) => !dish.categoryId),
+                sortMode
+              ).map((dish) => (
+                <li className="list-item" key={dish.id}>
+                  <Link to={`/dishes/${dish.id}`}>{dish.name}</Link>
+                </li>
+              ))}
             </ul>
           </div>
-        )
-      })}
+        </>
+      )}
 
-      <div className="card">
-        <h3>未分类</h3>
-        <ul className="list">
-          {sorted(sortMode)
-            .filter((dish) => !dish.categoryId)
-            .filter((dish) => matchesDish(dish, query))
-            .map((dish) => (
+      {selectedCategory !== 'all' && (
+        <div className="card">
+          <h3>
+            {selectedCategory === 'uncategorized'
+              ? '未分类'
+              : sortedCategories.find((item) => item.id === selectedCategory)?.name ?? '分类'}
+          </h3>
+          <ul className="list">
+            {sortDishes(filteredDishes, sortMode).map((dish) => (
               <li className="list-item" key={dish.id}>
                 <Link to={`/dishes/${dish.id}`}>{dish.name}</Link>
               </li>
             ))}
-        </ul>
-      </div>
+          </ul>
+        </div>
+      )}
     </section>
   )
 }
