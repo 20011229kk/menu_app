@@ -1,0 +1,4 @@
+.undo-bar {
+  border: 1rpx dashed #d9b889;
+  background: #fff4e1;
+}

@@ -1,6 +1,36 @@
 <view class="container">
   <view class="card">
-    <view class="section-title">${page}</view>
-    <view class="muted">页面骨架已建立</view>
+    <view class="section-title">编辑菜单</view>
+    <view class="muted">从菜品库中选择并排序</view>
   </view>
+
+  <view class="card">
+    <view class="section-title">菜单名称</view>
+    <input class="input" value="{{name}}" bindinput="onNameInput" />
+  </view>
+
+  <view class="card">
+    <view class="row">
+      <view class="section-title">添加菜品</view>
+    </view>
+    <picker mode="selector" range="{{dishes}}" range-key="name" bindchange="onDishSelect">
+      <view class="input">{{dishes[selectedDishIndex] ? dishes[selectedDishIndex].name : '选择菜品'}} </view>
+    </picker>
+    <view class="button-ghost" bindtap="addDish">添加</view>
+  </view>
+
+  <view class="card">
+    <view wx:if="{{menuItems.length === 0}}" class="muted">暂无菜品</view>
+    <view wx:for="{{menuItems}}" wx:key="id" class="stack">
+      <view class="section-title">{{(dishes.find(d => d.id === item.dishId) || {}).name || '菜品已删除'}}</view>
+      <input class="input" placeholder="备注" value="{{item.note}}" data-index="{{index}}" bindinput="updateNote" />
+      <view class="row">
+        <view class="button-ghost" data-index="{{index}}" data-direction="up" bindtap="moveItem">上移</view>
+        <view class="button-ghost" data-index="{{index}}" data-direction="down" bindtap="moveItem">下移</view>
+        <view class="button-ghost" data-index="{{index}}" bindtap="removeItem">删除</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="button-primary" bindtap="saveMenu">保存菜单</view>
 </view>

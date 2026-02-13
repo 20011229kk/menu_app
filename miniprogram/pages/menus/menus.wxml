@@ -1,6 +1,32 @@
 <view class="container">
   <view class="card">
-    <view class="section-title">${page}</view>
-    <view class="muted">页面骨架已建立</view>
+    <view class="section-title">菜单</view>
+    <view class="muted">创建一组菜品并设置顺序</view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">新增菜单</view>
+    <input class="input" placeholder="例如：周末家宴" value="{{name}}" bindinput="onNameInput" />
+    <view class="button-primary" bindtap="addMenu">新增菜单</view>
+  </view>
+
+  <view wx:if="{{menus.length === 0}}" class="card">
+    <view class="section-title">暂无菜单</view>
+    <view class="muted">可先创建一个“周末家宴”用于复用。</view>
+  </view>
+
+  <view class="card" wx:for="{{menus}}" wx:key="id">
+    <view class="section-title">{{item.name}}</view>
+    <view class="muted">{{item.items.length}} 道菜</view>
+    <view class="row">
+      <view class="button-ghost" data-id="{{item.id}}" bindtap="goToDetail">查看详情</view>
+      <view class="button-ghost" data-id="{{item.id}}" bindtap="goToEdit">编辑</view>
+      <view class="button-ghost" data-id="{{item.id}}" bindtap="removeMenu">删除</view>
+    </view>
+  </view>
+
+  <view wx:if="{{lastDeleted}}" class="card undo-bar">
+    <view>已删除菜单：{{lastDeleted.name}}</view>
+    <view class="button-ghost" bindtap="undoDelete">撤销</view>
   </view>
 </view>
