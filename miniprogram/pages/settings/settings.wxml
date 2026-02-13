@@ -18,20 +18,29 @@
   </view>
 
   <view class="card">
-    <view class="section-title">共享设置</view>
-    <view class="row">
-      <view class="muted">启用云同步</view>
-      <switch checked="{{syncEnabled}}" bindchange="toggleSync" />
+    <view class="row" bindtap="toggleSharePanel">
+      <view>
+        <view class="section-title">共享设置</view>
+        <view class="muted">情侣两人共享菜单数据</view>
+      </view>
+      <view class="collapse">{{shareExpanded ? '收起' : '展开'}}</view>
     </view>
-    <view class="muted" wx:if="{{syncStatus}}">{{syncStatus}}</view>
-    <view class="row" style="margin-top: 12rpx;">
-      <view class="button-ghost" bindtap="createInviteCode">生成邀请码</view>
-      <view class="button-ghost" bindtap="syncNow">立即同步</view>
-    </view>
-    <view wx:if="{{inviteCode}}" class="muted" style="margin-top: 12rpx;">邀请码：{{inviteCode}}</view>
-    <view class="row" style="margin-top: 12rpx;">
-      <input class="input" placeholder="输入邀请码" value="{{joinCode}}" bindinput="onJoinInput" />
-      <view class="button-ghost" bindtap="joinInviteCode">加入共享</view>
+
+    <view wx:if="{{shareExpanded}}" class="collapse-body">
+      <view class="row" style="margin-top: 12rpx;">
+        <view class="muted">启用云同步</view>
+        <switch checked="{{syncEnabled}}" bindchange="toggleSync" />
+      </view>
+      <view class="muted" wx:if="{{syncStatus}}">{{syncStatus}}</view>
+      <view class="row" style="margin-top: 12rpx;">
+        <view class="button-ghost" bindtap="createInviteCode">生成邀请码</view>
+        <view class="button-ghost" bindtap="syncNow">立即同步</view>
+      </view>
+      <view wx:if="{{inviteCode}}" class="muted" style="margin-top: 12rpx;">邀请码：{{inviteCode}}</view>
+      <view class="row" style="margin-top: 12rpx;">
+        <input class="input" placeholder="输入邀请码" value="{{joinCode}}" bindinput="onJoinInput" />
+        <view class="button-ghost" bindtap="joinInviteCode">加入共享</view>
+      </view>
     </view>
   </view>
 

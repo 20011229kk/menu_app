@@ -21,7 +21,8 @@ Page({
     coupleId: '',
     inviteCode: '',
     joinCode: '',
-    syncStatus: ''
+    syncStatus: '',
+    shareExpanded: false
   },
 
   onShow() {
@@ -35,6 +36,10 @@ Page({
       coupleId: coupleId || '',
       syncStatus: lastSync ? `上次同步：${lastSync}` : ''
     })
+  },
+
+  toggleSharePanel() {
+    this.setData({ shareExpanded: !this.data.shareExpanded })
   },
 
   exportData() {

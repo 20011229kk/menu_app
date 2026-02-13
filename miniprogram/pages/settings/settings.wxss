@@ -5,3 +5,14 @@
   margin-top: 16rpx;
   border: 1rpx solid #efe1cc;
 }
+
+.collapse {
+  color: #3b2c1a;
+  font-weight: 600;
+}
+
+.collapse-body {
+  margin-top: 8rpx;
+  padding-top: 12rpx;
+  border-top: 1rpx dashed #e8dcc8;
+}
