@@ -9,7 +9,7 @@ import { addRecentSearch, clearRecentSearches, getRecentSearches } from '../../u
 export function DishListPage() {
   const navigate = useNavigate()
   const { categories, load: loadCategories } = useCategoryStore()
-  const { dishes, lastDeleted, load: loadDishes, sorted, undoDelete } = useDishStore()
+  const { dishes, lastDeleted, load: loadDishes, undoDelete } = useDishStore()
   const [query, setQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [recentSearches, setRecentSearches] = useState<string[]>([])

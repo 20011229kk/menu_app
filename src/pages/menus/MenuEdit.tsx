@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import type { Dish, Menu, MenuItem } from '../../models'
+import type { Dish, MenuItem } from '../../models'
 import { useDishStore } from '../../stores/dishStore'
 import { useMenuStore } from '../../stores/menuStore'
 import { generateId } from '../../utils/id'
@@ -11,7 +11,6 @@ export function MenuEditPage() {
   const navigate = useNavigate()
   const { menus, getById, update, setItems, load: loadMenus } = useMenuStore()
   const { dishes, load: loadDishes } = useDishStore()
-  const [menu, setMenu] = useState<Menu | undefined>()
   const [name, setName] = useState('')
   const [items, setItemsState] = useState<MenuItem[]>([])
   const [selectedDishId, setSelectedDishId] = useState('')
@@ -21,7 +20,6 @@ export function MenuEditPage() {
     if (!menuId) return
     void getById(menuId).then((result) => {
       if (!result) return
-      setMenu(result)
       setName(result.name)
       setItemsState(result.items)
     })
@@ -51,9 +49,8 @@ export function MenuEditPage() {
       return
     }
     setError(null)
-    const updated = await update(menuId, { name })
+    await update(menuId, { name })
     await setItems(menuId, items)
-    setMenu(updated)
     navigate(`/menus/${menuId}`)
   }
 
