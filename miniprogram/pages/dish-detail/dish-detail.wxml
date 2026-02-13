@@ -1,6 +1,43 @@
 <view class="container">
-  <view class="card">
-    <view class="section-title">${page}</view>
-    <view class="muted">页面骨架已建立</view>
+  <view wx:if="{{dish}}" class="stack">
+    <view class="card">
+      <view class="section-title">{{dish.name}}</view>
+      <view class="muted">{{dish.description || '暂无简介'}}</view>
+      <view class="row">
+        <view class="button-ghost" bindtap="goToEdit">编辑</view>
+        <view class="button-ghost" bindtap="removeDish">删除</view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="section-title">用料</view>
+      <view wx:if="{{dish.ingredients.length === 0}}" class="muted">暂无用料</view>
+      <view wx:for="{{dish.ingredients}}" wx:key="id" class="muted">
+        {{item.name}} {{item.amount || ''}}{{item.unit || ''}} {{item.note ? '(' + item.note + ')' : ''}}
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="section-title">步骤</view>
+      <view wx:if="{{dish.steps.length === 0}}" class="muted">暂无步骤</view>
+      <view wx:for="{{dish.steps}}" wx:key="id" class="muted">
+        {{item.order}}. {{item.content}}
+      </view>
+    </view>
+
+    <view wx:if="{{dish.tips}}" class="card">
+      <view class="section-title">要点</view>
+      <view class="muted">{{dish.tips}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{!dish && !lastDeleted}}" class="card">
+    <view class="section-title">未找到菜品</view>
+    <view class="muted">该菜品可能已被删除。</view>
+  </view>
+
+  <view wx:if="{{lastDeleted}}" class="card undo-bar">
+    <view>已删除菜品：{{lastDeleted.name}}</view>
+    <view class="button-ghost" bindtap="undoDelete">撤销</view>
   </view>
 </view>
