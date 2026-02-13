@@ -152,6 +152,12 @@ body {
   font-size: 13px;
 }
 
+.error {
+  color: #8f2a2a;
+  font-size: 13px;
+  margin: 0;
+}
+
 .inline-input {
   flex: 1;
   padding: 6px 10px;

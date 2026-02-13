@@ -4,16 +4,18 @@ import type { Dish, Menu, MenuItem } from '../../models'
 import { useDishStore } from '../../stores/dishStore'
 import { useMenuStore } from '../../stores/menuStore'
 import { generateId } from '../../utils/id'
+import { validateMenuName } from '../../utils/validation'
 
 export function MenuEditPage() {
   const { menuId } = useParams()
   const navigate = useNavigate()
-  const { getById, update, setItems } = useMenuStore()
+  const { menus, getById, update, setItems, load: loadMenus } = useMenuStore()
   const { dishes, load: loadDishes } = useDishStore()
   const [menu, setMenu] = useState<Menu | undefined>()
   const [name, setName] = useState('')
   const [items, setItemsState] = useState<MenuItem[]>([])
   const [selectedDishId, setSelectedDishId] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!menuId) return
@@ -24,6 +26,10 @@ export function MenuEditPage() {
       setItemsState(result.items)
     })
   }, [menuId, getById])
+
+  useEffect(() => {
+    void loadMenus()
+  }, [loadMenus])
 
   useEffect(() => {
     void loadDishes()
@@ -39,6 +45,12 @@ export function MenuEditPage() {
 
   const saveMenu = async () => {
     if (!menuId) return
+    const message = validateMenuName(name, menus, menuId)
+    if (message) {
+      setError(message)
+      return
+    }
+    setError(null)
     const updated = await update(menuId, { name })
     await setItems(menuId, items)
     setMenu(updated)
@@ -163,6 +175,7 @@ export function MenuEditPage() {
         <button className="primary-button" type="submit">
           保存菜单
         </button>
+        {error && <p className="error">{error}</p>}
       </form>
     </section>
   )

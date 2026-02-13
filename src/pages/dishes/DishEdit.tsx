@@ -4,6 +4,7 @@ import type { Dish, IngredientItem, StepItem } from '../../models'
 import { useCategoryStore } from '../../stores/categoryStore'
 import { useDishStore } from '../../stores/dishStore'
 import { generateId } from '../../utils/id'
+import { validateDishName, validateIngredients, validateSteps } from '../../utils/validation'
 
 const difficultyOptions: Dish['difficulty'][] = ['easy', 'medium', 'hard']
 
@@ -23,6 +24,7 @@ export function DishEditPage() {
   const [tips, setTips] = useState('')
   const [ingredients, setIngredients] = useState<IngredientItem[]>([])
   const [steps, setSteps] = useState<StepItem[]>([])
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     void loadCategories()
@@ -50,7 +52,22 @@ export function DishEditPage() {
   )
 
   const handleSave = async () => {
-    if (!name.trim()) return
+    const nameError = validateDishName(name)
+    if (nameError) {
+      setError(nameError)
+      return
+    }
+    const ingredientError = validateIngredients(ingredients)
+    if (ingredientError) {
+      setError(ingredientError)
+      return
+    }
+    const stepError = validateSteps(steps)
+    if (stepError) {
+      setError(stepError)
+      return
+    }
+    setError(null)
     const payload = {
       name,
       categoryId,
@@ -293,6 +310,7 @@ export function DishEditPage() {
         <button className="primary-button" type="submit">
           保存
         </button>
+        {error && <p className="error">{error}</p>}
       </form>
     </section>
   )

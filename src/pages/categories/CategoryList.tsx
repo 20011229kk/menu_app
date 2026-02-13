@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useCategoryStore } from '../../stores/categoryStore'
+import { validateCategoryName } from '../../utils/validation'
 
 export function CategoryListPage() {
   const { categories, lastDeleted, load, add, rename, remove, move, undoDelete } = useCategoryStore()
   const [name, setName] = useState('')
+  const [error, setError] = useState<string | null>(null)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingName, setEditingName] = useState('')
 
@@ -18,6 +20,12 @@ export function CategoryListPage() {
 
   const saveEdit = async () => {
     if (!editingId) return
+    const message = validateCategoryName(editingName, categories, editingId)
+    if (message) {
+      setError(message)
+      return
+    }
+    setError(null)
     await rename(editingId, editingName)
     setEditingId(null)
     setEditingName('')
@@ -34,6 +42,12 @@ export function CategoryListPage() {
         className="form"
         onSubmit={(event) => {
           event.preventDefault()
+          const message = validateCategoryName(name, categories)
+          if (message) {
+            setError(message)
+            return
+          }
+          setError(null)
           void add(name)
           setName('')
         }}
@@ -49,6 +63,7 @@ export function CategoryListPage() {
         <button className="primary-button" type="submit">
           添加分类
         </button>
+        {error && <p className="error">{error}</p>}
       </form>
 
       {categories.length === 0 && (

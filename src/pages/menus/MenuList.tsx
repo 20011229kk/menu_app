@@ -1,18 +1,25 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useMenuStore } from '../../stores/menuStore'
+import { validateMenuName } from '../../utils/validation'
 
 export function MenuListPage() {
   const navigate = useNavigate()
   const { menus, lastDeleted, load, add, remove, undoDelete } = useMenuStore()
   const [name, setName] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     void load()
   }, [load])
 
   const handleAdd = async () => {
-    if (!name.trim()) return
+    const message = validateMenuName(name, menus)
+    if (message) {
+      setError(message)
+      return
+    }
+    setError(null)
     const menu = await add(name)
     setName('')
     navigate(`/menus/${menu.id}/edit`)
@@ -39,6 +46,7 @@ export function MenuListPage() {
         <button className="primary-button" type="submit">
           新增菜单
         </button>
+        {error && <p className="error">{error}</p>}
       </form>
 
       <div className="card-grid">
