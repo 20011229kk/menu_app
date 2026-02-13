@@ -3,4 +3,5 @@
   height: 120rpx;
   border-radius: 16rpx;
   margin-right: 16rpx;
+  border: 1rpx solid #efe1cc;
 }

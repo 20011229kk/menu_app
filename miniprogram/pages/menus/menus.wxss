@@ -8,4 +8,5 @@
   height: 240rpx;
   border-radius: 16rpx;
   margin-bottom: 12rpx;
+  border: 1rpx solid #efe1cc;
 }

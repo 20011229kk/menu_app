@@ -7,4 +7,5 @@ textarea.input {
   height: 260rpx;
   border-radius: 16rpx;
   margin-top: 12rpx;
+  border: 1rpx solid #efe1cc;
 }
