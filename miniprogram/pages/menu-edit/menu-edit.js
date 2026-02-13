@@ -31,11 +31,19 @@ Page({
     const menus = listMenus()
     const menu = menus.find((item) => item.id === this._menuId)
     const dishes = listDishes()
+    const dishMap = {}
+    dishes.forEach((dish) => {
+      dishMap[dish.id] = dish.name
+    })
+    const menuItems = (menu ? menu.items : []).map((item) => ({
+      ...item,
+      dishName: dishMap[item.dishId] || '菜品已删除'
+    }))
     this.setData({
       id: this._menuId,
       name: menu ? menu.name : '',
       dishes,
-      menuItems: menu ? menu.items : []
+      menuItems
     })
   },
 
@@ -57,6 +65,7 @@ Page({
     const next = this.data.menuItems.concat({
       id: generateId(),
       dishId: dish.id,
+      dishName: dish.name,
       order: maxOrder + 1,
       note: ''
     })
@@ -108,7 +117,14 @@ Page({
       return
     }
     this.setData({ error: '' })
-    updateMenu(this.data.id, { name, items: this.data.menuItems })
+    const payloadItems = this.data.menuItems.map((item) => ({
+      id: item.id,
+      dishId: item.dishId,
+      servings: item.servings,
+      note: item.note,
+      order: item.order
+    }))
+    updateMenu(this.data.id, { name, items: payloadItems })
     wx.navigateBack()
   }
 })

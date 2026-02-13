@@ -33,3 +33,4 @@
 - 小程序: 修正 project.config.json 位置以便开发者工具识别。
 - 小程序: 为直接打开 miniprogram 目录添加本地 project.config.json。
 - 修复: 小程序菜单详情页 WXML 表达式错误。
+- 修复: 小程序菜单编辑页 WXML 表达式错误。
