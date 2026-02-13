@@ -3,12 +3,15 @@ const { listCategories } = require('../../services/categoryService')
 const { generateId } = require('../../utils/id')
 const { validateRequired, validateIngredients, validateSteps } = require('../../utils/validation')
 const { on, off } = require('../../utils/events')
+const { chooseSingleImage, saveImage } = require('../../utils/files')
+const { showError } = require('../../utils/errors')
 
 Page({
   data: {
     id: '',
     name: '',
     description: '',
+    coverImage: '',
     categoryId: '',
     categoryOptions: [],
     categoryIndex: 0,
@@ -50,6 +53,7 @@ Page({
           id: dish.id,
           name: dish.name,
           description: dish.description || '',
+          coverImage: dish.coverImage || '',
           categoryId: dish.categoryId || '',
           categoryIndex: index >= 0 ? index : 0,
           cookTime: dish.cookTime || '',
@@ -70,6 +74,20 @@ Page({
 
   onDescriptionInput(event) {
     this.setData({ description: event.detail.value })
+  },
+
+  async chooseCoverImage() {
+    try {
+      const tempPath = await chooseSingleImage()
+      const savedPath = await saveImage(tempPath)
+      this.setData({ coverImage: savedPath })
+    } catch (error) {
+      showError(error, '选择图片失败')
+    }
+  },
+
+  removeCoverImage() {
+    this.setData({ coverImage: '' })
   },
 
   onCategoryChange(event) {
@@ -172,6 +190,7 @@ Page({
     const payload = {
       name,
       description: this.data.description,
+      coverImage: this.data.coverImage,
       categoryId: this.data.categoryId || null,
       ingredients: this.data.ingredients,
       steps: this.data.steps,

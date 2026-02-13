@@ -11,6 +11,7 @@ function createDish(input) {
   const dish = {
     id: generateId(),
     name: input.name.trim(),
+    coverImage: input.coverImage || '',
     categoryId: input.categoryId ?? null,
     description: input.description ? input.description.trim() : '',
     ingredients: input.ingredients || [],

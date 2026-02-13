@@ -41,6 +41,7 @@ function normalizeDishes(dishes) {
     ...item,
     id: item.id || generateId(),
     name: String(item.name || '').trim(),
+    coverImage: item.coverImage || '',
     categoryId: item.categoryId || null,
     description: item.description || '',
     ingredients: normalizeIngredients(item.ingredients),

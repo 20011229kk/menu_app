@@ -8,6 +8,15 @@
     <view class="section-title">基础信息</view>
     <input class="input" placeholder="菜名" value="{{name}}" bindinput="onNameInput" />
     <input class="input" placeholder="一句话简介" value="{{description}}" bindinput="onDescriptionInput" />
+
+    <view class="row" style="margin-top: 12rpx;">
+      <view class="section-title">菜品图片</view>
+      <view class="button-ghost" bindtap="chooseCoverImage">选择图片</view>
+    </view>
+    <image wx:if="{{coverImage}}" class="cover" mode="aspectFill" src="{{coverImage}}" />
+    <view wx:if="{{coverImage}}" class="button-ghost" bindtap="removeCoverImage">移除图片</view>
+    <view wx:if="{{!coverImage}}" class="muted">未设置图片</view>
+
     <picker mode="selector" range="{{categoryOptions}}" range-key="name" value="{{categoryIndex}}" bindchange="onCategoryChange">
       <view class="input">{{categoryOptions[categoryIndex].name}}</view>
     </picker>
@@ -15,7 +24,8 @@
     <input class="input" placeholder="总时长(分钟)" type="number" value="{{cookTime}}" bindinput="onCookTimeInput" />
     <input class="input" placeholder="份量" type="number" value="{{servings}}" bindinput="onServingsInput" />
     <picker mode="selector" range="{{difficultyOptions}}" value="{{difficultyIndex}}" bindchange="onDifficultyChange">
-      <view class="input">{{difficulty || '难度'}}</view>
+      <view class="input">{{difficulty || '难度'}}
+      </view>
     </picker>
     <textarea class="input" placeholder="要点/踩坑" value="{{tips}}" bindinput="onTipsInput" />
   </view>

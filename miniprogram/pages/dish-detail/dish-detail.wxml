@@ -1,6 +1,7 @@
 <view class="container">
   <view wx:if="{{dish}}" class="stack">
     <view class="card">
+      <image wx:if="{{dish.coverImage}}" class="cover" mode="aspectFill" src="{{dish.coverImage}}" />
       <view class="section-title">{{dish.name}}</view>
       <view class="muted">{{dish.description || '暂无简介'}}</view>
       <view class="row">
