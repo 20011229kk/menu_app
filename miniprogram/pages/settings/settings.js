@@ -26,19 +26,22 @@ Page({
   },
 
   onLoad() {
-    this._loading = false
+    this._loadingCount = 0
   },
 
   startLoading(title) {
-    if (this._loading) return
-    this._loading = true
-    wx.showLoading({ title: title || '处理中...' })
+    this._loadingCount += 1
+    if (this._loadingCount === 1) {
+      wx.showLoading({ title: title || '处理中...' })
+    }
   },
 
   stopLoading() {
-    if (!this._loading) return
-    this._loading = false
-    wx.hideLoading()
+    if (this._loadingCount <= 0) return
+    this._loadingCount -= 1
+    if (this._loadingCount === 0) {
+      wx.hideLoading()
+    }
   },
 
   onShow() {
