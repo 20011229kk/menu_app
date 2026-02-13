@@ -49,8 +49,20 @@ Page({
     this.setData({ view })
   },
 
+  goToCategories() {
+    wx.navigateTo({ url: '/pages/categories/categories' })
+  },
+
   goToDishes() {
     wx.navigateTo({ url: '/pages/dishes/dishes' })
+  },
+
+  goToMenus() {
+    wx.navigateTo({ url: '/pages/menus/menus' })
+  },
+
+  goToSettings() {
+    wx.navigateTo({ url: '/pages/settings/settings' })
   },
 
   goToDishDetail(event) {

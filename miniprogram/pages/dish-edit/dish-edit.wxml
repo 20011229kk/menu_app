@@ -11,9 +11,10 @@
     <picker mode="selector" range="{{categoryOptions}}" range-key="name" value="{{categoryIndex}}" bindchange="onCategoryChange">
       <view class="input">{{categoryOptions[categoryIndex].name}}</view>
     </picker>
+    <view wx:if="{{categoryOptions.length === 1}}" class="muted">还没有分类，先去分类页创建。</view>
     <input class="input" placeholder="总时长(分钟)" type="number" value="{{cookTime}}" bindinput="onCookTimeInput" />
     <input class="input" placeholder="份量" type="number" value="{{servings}}" bindinput="onServingsInput" />
-    <picker mode="selector" range="{{['easy','medium','hard']}}" bindchange="onDifficultyChange">
+    <picker mode="selector" range="{{difficultyOptions}}" value="{{difficultyIndex}}" bindchange="onDifficultyChange">
       <view class="input">{{difficulty || '难度'}}</view>
     </picker>
     <textarea class="input" placeholder="要点/踩坑" value="{{tips}}" bindinput="onTipsInput" />

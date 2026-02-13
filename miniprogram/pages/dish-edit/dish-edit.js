@@ -15,6 +15,8 @@ Page({
     cookTime: '',
     servings: '',
     difficulty: '',
+    difficultyOptions: ['简单', '中等', '困难'],
+    difficultyIndex: 0,
     tips: '',
     ingredients: [],
     steps: [],
@@ -43,6 +45,7 @@ Page({
       const dish = listDishes().find((item) => item.id === this._dishId)
       if (dish) {
         const index = categoryOptions.findIndex((item) => item.id === (dish.categoryId || ''))
+        const difficultyIndex = this.data.difficultyOptions.indexOf(dish.difficulty || '')
         this.setData({
           id: dish.id,
           name: dish.name,
@@ -52,6 +55,7 @@ Page({
           cookTime: dish.cookTime || '',
           servings: dish.servings || '',
           difficulty: dish.difficulty || '',
+          difficultyIndex: difficultyIndex >= 0 ? difficultyIndex : 0,
           tips: dish.tips || '',
           ingredients: dish.ingredients || [],
           steps: dish.steps || []
@@ -83,7 +87,9 @@ Page({
   },
 
   onDifficultyChange(event) {
-    this.setData({ difficulty: event.detail.value })
+    const index = Number(event.detail.value)
+    const label = this.data.difficultyOptions[index]
+    this.setData({ difficulty: label, difficultyIndex: index })
   },
 
   onTipsInput(event) {
