@@ -19,8 +19,16 @@ Page({
       success: () => {
         wx.showModal({
           title: '导出完成',
-          content: `文件已保存至: ${path}`,
-          showCancel: false
+          content: '是否保存到手机或分享？',
+          confirmText: '去保存',
+          cancelText: '稍后',
+          success: (res) => {
+            if (!res.confirm) return
+            wx.openDocument({
+              filePath: path,
+              showMenu: true
+            })
+          }
         })
       },
       fail: (error) => {
