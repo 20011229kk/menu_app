@@ -6,11 +6,12 @@ function listMenus() {
   return readList(STORAGE_KEYS.menus).filter((item) => !item.deletedAt)
 }
 
-function createMenu(name) {
+function createMenu(name, coverImage) {
   const now = nowIso()
   const menu = {
     id: generateId(),
     name: name.trim(),
+    coverImage: coverImage || '',
     items: [],
     createdAt: now,
     updatedAt: now,

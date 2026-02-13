@@ -7,6 +7,15 @@
   <view class="card">
     <view class="section-title">新增菜单</view>
     <input class="input" placeholder="例如：周末家宴" value="{{name}}" bindinput="onNameInput" />
+
+    <view class="row" style="margin-top: 12rpx;">
+      <view class="section-title">菜单封面</view>
+      <view class="button-ghost" bindtap="chooseCoverImage">选择图片</view>
+    </view>
+    <image wx:if="{{coverImage}}" class="cover" mode="aspectFill" src="{{coverImage}}" />
+    <view wx:if="{{coverImage}}" class="button-ghost" bindtap="removeCoverImage">移除图片</view>
+    <view wx:if="{{!coverImage}}" class="muted">未设置封面</view>
+
     <view class="button-primary" bindtap="addMenu">新增菜单</view>
     <view wx:if="{{error}}" class="error">{{error}}</view>
   </view>
