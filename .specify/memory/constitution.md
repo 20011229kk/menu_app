@@ -1,50 +1,73 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!-- Sync Impact Report:
+- 版本变更: 1.1.0 → 1.1.1
+- 修改的原则: 一、文档中文优先 → 一、文档中文优先; 二、变更可追溯（Changelog + Commit） → 二、变更可追溯（Changelog + Commit）; 三、可测试需求 → 五、可测试需求; 四、计划驱动与分阶段交付 → 六、计划驱动与最小复杂度; 五、一致性与最小复杂度 → 六、计划驱动与最小复杂度
+- 新增原则: 三、本地优先与离线可用; 四、结构化数据与稳定 ID
+- 新增章节: 产品与数据约束
+- 移除章节: 无
+- 需要更新的模板: .specify/templates/plan-template.md ✅ 已更新
+- 待办: 无
+-->
+# menu_app 宪章
 
-## Core Principles
+## 核心原则
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### 一、文档中文优先
+所有项目文档必须使用中文编写，包括规范、计划、任务、清单、指南与变更记录。
+当必须保留英文术语、命令或代码标识时，需提供中文解释或注释。
+新增文档必须直接以中文产出；既有文档在被修改时须同步中文化。
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### 二、变更可追溯（Changelog + Commit）
+每次代码发生改变，必须同步更新根目录的 `changelog.md`，并提交对应的
+commit。变更记录需明确关联变更范围与影响；如无用户影响需明确注明。
+禁止出现“代码变更无记录”或“记录无提交”的情况。
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### 三、本地优先与离线可用
+核心能力必须在离线场景下可用，数据以本地保存为优先。
+如需扩展同步，同步必须是可选能力，且不得影响离线使用体验。
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### 四、结构化数据与稳定 ID
+所有实体必须使用稳定唯一 ID（如 UUID/ULID），不得用名称作为主键。
+菜谱步骤与用料必须用结构化数组存储，禁止将其合并为不可迁移的长文本字段。
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### 五、可测试需求
+所有功能需求必须以可测试的用户故事与验收场景表达。
+每个用户故事需可独立验证，且验收条件必须清晰、可复现、可量化。
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### 六、计划驱动与最小复杂度
+功能交付必须遵循 `spec → plan → tasks → implementation` 的流程。
+优先采用最简单、最一致的实现方案，避免不必要的抽象与复杂性。
+如需引入额外复杂度，必须在计划中记录并说明理由与替代方案。
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+## 文档与记录规范
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+- 文档统一使用 Markdown，日期格式统一为 `YYYY-MM-DD`。
+- `changelog.md` 位于仓库根目录，记录所有代码变更与其影响。
+- 规范类文档包含：规范（spec）、计划（plan）、任务（tasks）、清单（checklist）、
+  以及自动汇总的项目指南（agent 文件）。
+- 对外标准或协议引用可保留英文原文，但须提供中文说明。
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## 产品与数据约束
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+- 任何列表必须具备明确且一致的排序规则，避免“看起来乱”。
+- 分类删除不得删除菜品，菜品应转为“未分类”。
+- 删除操作优先支持撤销（软删除）；若采用硬删除，必须二次确认。
+- 需提供基础备份通道，至少支持数据导出（JSON）。
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+## 开发流程与质量门
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+- 需求定义必须先完成 `spec.md`，再进行 `plan.md` 与 `tasks.md`。
+- 代码变更必须同步更新 `changelog.md` 并提交对应 commit。
+- 若需求或计划明确要求测试，测试必须先写并确认失败后再实现。
+- 每次评审必须核对“宪章一致性”，确认文档中文化、离线优先与变更记录已完成。
+
+## 治理
+
+- 本宪章高于所有其他开发约定与模板。
+- 宪章修订必须包含：修订说明、版本号更新、同步影响报告与更新变更记录。
+- 版本号遵循语义化版本：
+  - MAJOR：原则或治理规则发生不兼容变更
+  - MINOR：新增原则或新增重大约束
+  - PATCH：澄清、措辞修订或非语义调整
+- 每次评审与合并前必须进行宪章合规检查。
+
+**Version**: 1.1.1 | **Ratified**: 2026-02-13 | **Last Amended**: 2026-02-13
