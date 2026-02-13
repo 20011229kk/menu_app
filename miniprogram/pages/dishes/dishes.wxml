@@ -1,6 +1,30 @@
 <view class="container">
   <view class="card">
-    <view class="section-title">${page}</view>
-    <view class="muted">页面骨架已建立</view>
+    <view class="section-title">菜品</view>
+    <view class="muted">搜索、筛选与排序</view>
+  </view>
+
+  <view class="card">
+    <input class="input" placeholder="搜索菜名/描述/用料" value="{{query}}" bindinput="onQueryInput" />
+    <picker mode="selector" range="{{categoryOptions}}" range-key="name" bindchange="onCategoryChange">
+      <view class="input">{{selectedCategoryLabel}}</view>
+    </picker>
+    <view class="row">
+      <view class="button-ghost" data-mode="name" bindtap="switchSort">名称排序</view>
+      <view class="button-ghost" data-mode="updatedAt" bindtap="switchSort">更新排序</view>
+      <view class="button-primary" bindtap="goToNew">新增菜品</view>
+    </view>
+  </view>
+
+  <view wx:if="{{filtered.length === 0}}" class="card">
+    <view class="section-title">暂无匹配菜品</view>
+    <view class="muted">试试更短的关键词，或直接新增一条菜谱。</view>
+    <view class="button-primary" bindtap="goToNew">新增菜品</view>
+  </view>
+
+  <view class="card" wx:for="{{filtered}}" wx:key="id">
+    <view class="section-title">{{item.name}}</view>
+    <view class="muted">{{item.description || '暂无简介'}}</view>
+    <view class="button-ghost" data-id="{{item.id}}" bindtap="goToDetail">查看详情</view>
   </view>
 </view>
