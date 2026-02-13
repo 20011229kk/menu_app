@@ -33,9 +33,25 @@ Page({
           cancelText: '稍后',
           success: (res) => {
             if (!res.confirm) return
+            if (typeof wx.shareFileMessage === 'function') {
+              wx.shareFileMessage({
+                filePath: path,
+                fileName: 'menu_app_export.json',
+                success: () => {
+                  wx.showToast({ title: '已唤起分享', icon: 'success' })
+                },
+                fail: (error) => {
+                  showError(error, '分享失败')
+                }
+              })
+              return
+            }
             wx.openDocument({
               filePath: path,
-              showMenu: true
+              showMenu: true,
+              fail: (error) => {
+                showError(error, '无法打开文件')
+              }
             })
           }
         })
