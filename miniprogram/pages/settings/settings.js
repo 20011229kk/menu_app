@@ -10,6 +10,13 @@ Page({
     galleryImage: ''
   },
 
+  onShow() {
+    const saved = wx.getStorageSync('menu_app_gallery_image')
+    if (saved) {
+      this.setData({ galleryImage: saved })
+    }
+  },
+
   exportData() {
     const content = exportJson()
     const fs = wx.getFileSystemManager()
@@ -74,13 +81,10 @@ Page({
     try {
       const tempPath = await chooseSingleImage()
       const savedPath = await saveImage(tempPath)
+      wx.setStorageSync('menu_app_gallery_image', savedPath)
       this.setData({ galleryImage: savedPath })
     } catch (error) {
       showError(error, '选择图片失败')
     }
   },
-
-  removeGalleryImage() {
-    this.setData({ galleryImage: '' })
-  }
 })

@@ -7,11 +7,16 @@
   <view class="card">
     <view class="section-title">这是我们的菜单</view>
     <view class="muted">这是我们的菜单</view>
-    <view class="row" style="margin-top: 12rpx;">
+    <view wx:if="{{!galleryImage}}" class="row" style="margin-top: 12rpx;">
       <view class="button-ghost" bindtap="chooseGalleryImage">上传图片</view>
-      <view wx:if="{{galleryImage}}" class="button-ghost" bindtap="removeGalleryImage">移除</view>
     </view>
-    <image wx:if="{{galleryImage}}" class="gallery" mode="aspectFill" src="{{galleryImage}}" />
+    <image
+      wx:if="{{galleryImage}}"
+      class="gallery"
+      mode="aspectFill"
+      src="{{galleryImage}}"
+      bindtap="chooseGalleryImage"
+    />
     <view wx:if="{{!galleryImage}}" class="empty-card" style="margin-top: 12rpx;">
       <view class="muted">尚未上传图片</view>
     </view>
