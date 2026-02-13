@@ -1,0 +1,6 @@
+<view class="container">
+  <view class="card">
+    <view class="section-title">${page}</view>
+    <view class="muted">页面骨架已建立</view>
+  </view>
+</view>

@@ -1,0 +1,22 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/categories/categories",
+    "pages/dishes/dishes",
+    "pages/dish-detail/dish-detail",
+    "pages/dish-edit/dish-edit",
+    "pages/menus/menus",
+    "pages/menu-detail/menu-detail",
+    "pages/menu-edit/menu-edit",
+    "pages/settings/settings"
+  ],
+  "window": {
+    "navigationBarTitleText": "菜单/菜谱管理",
+    "navigationBarBackgroundColor": "#f3e0c5",
+    "navigationBarTextStyle": "black",
+    "backgroundTextStyle": "light",
+    "backgroundColor": "#f7f2ea"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

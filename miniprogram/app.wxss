@@ -1,0 +1,66 @@
+page {
+  background: #f7f2ea;
+  color: #1f1c16;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.container {
+  padding: 16rpx 24rpx 80rpx;
+}
+
+.card {
+  background: #fff;
+  border: 1rpx solid #efe1cc;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  box-shadow: 0 12rpx 24rpx rgba(80, 50, 20, 0.08);
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  margin-bottom: 8rpx;
+}
+
+.muted {
+  color: #7a6a55;
+  font-size: 26rpx;
+}
+
+.button-primary {
+  background: #3b2c1a;
+  color: #fff;
+  border-radius: 999rpx;
+  padding: 14rpx 24rpx;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.button-ghost {
+  border: 1rpx solid #e3d3bc;
+  color: #3b2c1a;
+  border-radius: 999rpx;
+  padding: 10rpx 20rpx;
+  display: inline-block;
+}
+
+.input {
+  border: 1rpx solid #e3d3bc;
+  border-radius: 16rpx;
+  padding: 16rpx 20rpx;
+  background: #fff;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
