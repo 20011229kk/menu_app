@@ -1,4 +1,18 @@
+import { useState } from 'react'
+import { downloadJson } from '../../services/exportService'
+
 export function SettingsPage() {
+  const [exporting, setExporting] = useState(false)
+
+  const handleExport = async () => {
+    setExporting(true)
+    try {
+      await downloadJson()
+    } finally {
+      setExporting(false)
+    }
+  }
+
   return (
     <section className="page">
       <div className="page-header">
@@ -9,8 +23,8 @@ export function SettingsPage() {
       <div className="card">
         <h3>数据导出</h3>
         <p>导出为 JSON 文件用于备份。</p>
-        <button className="primary-button" type="button">
-          导出 JSON
+        <button className="primary-button" type="button" onClick={() => void handleExport()} disabled={exporting}>
+          {exporting ? '导出中...' : '导出 JSON'}
         </button>
       </div>
     </section>
