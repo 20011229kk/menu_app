@@ -1,4 +1,23 @@
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useMenuStore } from '../../stores/menuStore'
+
 export function MenuListPage() {
+  const navigate = useNavigate()
+  const { menus, load, add, remove } = useMenuStore()
+  const [name, setName] = useState('')
+
+  useEffect(() => {
+    void load()
+  }, [load])
+
+  const handleAdd = async () => {
+    if (!name.trim()) return
+    const menu = await add(name)
+    setName('')
+    navigate(`/menus/${menu.id}/edit`)
+  }
+
   return (
     <section className="page">
       <div className="page-header">
@@ -6,12 +25,41 @@ export function MenuListPage() {
         <p>创建一组菜品并设置顺序。</p>
       </div>
 
-      <div className="card">
-        <h3>周末家宴</h3>
-        <p>4 道菜</p>
-        <button className="ghost-button" type="button">
-          查看详情
+      <form
+        className="form"
+        onSubmit={(event) => {
+          event.preventDefault()
+          void handleAdd()
+        }}
+      >
+        <label className="field">
+          <span>菜单名称</span>
+          <input value={name} onChange={(event) => setName(event.target.value)} placeholder="例如：周末家宴" />
+        </label>
+        <button className="primary-button" type="submit">
+          新增菜单
         </button>
+      </form>
+
+      <div className="card-grid">
+        {menus.length === 0 && <div className="empty">暂无菜单</div>}
+        {menus.map((menu) => (
+          <div className="card" key={menu.id}>
+            <h3>{menu.name}</h3>
+            <p>{menu.items.length} 道菜</p>
+            <div className="panel-actions">
+              <Link className="ghost-button" to={`/menus/${menu.id}`}>
+                查看详情
+              </Link>
+              <Link className="ghost-button" to={`/menus/${menu.id}/edit`}>
+                编辑
+              </Link>
+              <button className="ghost-button danger" type="button" onClick={() => void remove(menu.id)}>
+                删除
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   )

@@ -121,6 +121,7 @@ body {
 .panel-actions {
   display: flex;
   gap: 6px;
+  flex-wrap: wrap;
 }
 
 .empty {
@@ -138,6 +139,12 @@ body {
   padding: 6px 10px;
   border-radius: 8px;
   border: 1px solid #e3d3bc;
+}
+
+.inline-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .list {
