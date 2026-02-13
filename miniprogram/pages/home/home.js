@@ -49,20 +49,8 @@ Page({
     this.setData({ view })
   },
 
-  goToCategories() {
-    wx.switchTab({ url: '/pages/categories/categories' })
-  },
-
   goToDishes() {
     wx.switchTab({ url: '/pages/dishes/dishes' })
-  },
-
-  goToMenus() {
-    wx.switchTab({ url: '/pages/menus/menus' })
-  },
-
-  goToSettings() {
-    wx.switchTab({ url: '/pages/settings/settings' })
   },
 
   goToDishDetail(event) {

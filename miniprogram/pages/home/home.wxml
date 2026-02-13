@@ -4,16 +4,6 @@
     <view class="muted">分类概览与最近更新视图</view>
   </view>
 
-  <view class="card">
-    <view class="section-title">快捷入口</view>
-    <view class="row">
-      <view class="button-ghost" bindtap="goToCategories">分类</view>
-      <view class="button-ghost" bindtap="goToDishes">菜品</view>
-      <view class="button-ghost" bindtap="goToMenus">菜单</view>
-      <view class="button-ghost" bindtap="goToSettings">设置</view>
-    </view>
-  </view>
-
   <view class="segmented">
     <view
       class="segmented-button {{view === 'category' ? 'segmented-active' : ''}}"

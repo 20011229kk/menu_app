@@ -25,23 +25,33 @@
     "list": [
       {
         "pagePath": "pages/home/home",
-        "text": "首页"
+        "text": "首页",
+        "iconPath": "assets/tabbar/home-normal.png",
+        "selectedIconPath": "assets/tabbar/home-active.png"
       },
       {
         "pagePath": "pages/categories/categories",
-        "text": "分类"
+        "text": "分类",
+        "iconPath": "assets/tabbar/categories-normal.png",
+        "selectedIconPath": "assets/tabbar/categories-active.png"
       },
       {
         "pagePath": "pages/dishes/dishes",
-        "text": "菜品"
+        "text": "菜品",
+        "iconPath": "assets/tabbar/dishes-normal.png",
+        "selectedIconPath": "assets/tabbar/dishes-active.png"
       },
       {
         "pagePath": "pages/menus/menus",
-        "text": "菜单"
+        "text": "菜单",
+        "iconPath": "assets/tabbar/menus-normal.png",
+        "selectedIconPath": "assets/tabbar/menus-active.png"
       },
       {
         "pagePath": "pages/settings/settings",
-        "text": "设置"
+        "text": "设置",
+        "iconPath": "assets/tabbar/settings-normal.png",
+        "selectedIconPath": "assets/tabbar/settings-active.png"
       }
     ]
   },
