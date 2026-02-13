@@ -32,7 +32,10 @@ Page({
   startLoading(title) {
     this._loadingCount += 1
     if (this._loadingCount === 1) {
-      wx.showLoading({ title: title || '处理中...' })
+      wx.showNavigationBarLoading()
+      if (title) {
+        wx.showToast({ title, icon: 'loading', duration: 15000 })
+      }
     }
   },
 
@@ -40,7 +43,7 @@ Page({
     if (this._loadingCount <= 0) return
     this._loadingCount -= 1
     if (this._loadingCount === 0) {
-      wx.hideLoading()
+      wx.hideNavigationBarLoading()
     }
   },
 
