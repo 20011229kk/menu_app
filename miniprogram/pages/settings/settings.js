@@ -1,6 +1,7 @@
 const { exportJson } = require('../../services/exportService')
 const { importJson } = require('../../services/importService')
 const { emit } = require('../../utils/events')
+const { showError } = require('../../utils/errors')
 
 Page({
   data: {
@@ -22,8 +23,8 @@ Page({
           showCancel: false
         })
       },
-      fail: () => {
-        wx.showToast({ title: '导出失败', icon: 'none' })
+      fail: (error) => {
+        showError(error, '导出失败')
       }
     })
   },
@@ -48,12 +49,11 @@ Page({
               emit('data:changed')
               wx.showToast({ title: '导入成功', icon: 'success' })
             } catch (error) {
-              const message = error && error.message ? error.message : '导入失败'
-              wx.showToast({ title: message, icon: 'none' })
+              showError(error, '导入失败')
             }
           },
-          fail: () => {
-            wx.showToast({ title: '读取文件失败', icon: 'none' })
+          fail: (error) => {
+            showError(error, '读取文件失败')
           }
         })
       }

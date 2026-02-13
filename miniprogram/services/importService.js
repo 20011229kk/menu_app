@@ -1,4 +1,5 @@
 const { STORAGE_KEYS, writeList } = require('../utils/storage')
+const { repairData } = require('../utils/repair')
 
 function parsePayload(text) {
   const payload = JSON.parse(text)
@@ -13,10 +14,11 @@ function importJson(text) {
   writeList(STORAGE_KEYS.categories, payload.categories)
   writeList(STORAGE_KEYS.dishes, payload.dishes)
   writeList(STORAGE_KEYS.menus, payload.menus)
+  const repaired = repairData()
   return {
-    categories: payload.categories.length,
-    dishes: payload.dishes.length,
-    menus: payload.menus.length
+    categories: repaired.categories.length,
+    dishes: repaired.dishes.length,
+    menus: repaired.menus.length
   }
 }
 
