@@ -1,5 +1,5 @@
 {
-  "miniprogramRoot": "miniprogram/",
+  "miniprogramRoot": "",
   "projectname": "menu_app",
   "description": "离线优先菜单/菜谱管理",
   "appid": "touristappid",
