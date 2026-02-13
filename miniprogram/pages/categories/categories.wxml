@@ -10,7 +10,7 @@
     <view class="button-primary" bindtap="addCategory">添加分类</view>
   </view>
 
-  <view wx:if="{{categories.length === 0}}" class="card">
+  <view wx:if="{{categories.length === 0}}" class="card empty-card">
     <view class="section-title">还没有分类</view>
     <view class="muted">先创建常用分类（如热菜/凉菜/汤）。</view>
   </view>

@@ -16,7 +16,7 @@
     </view>
   </view>
 
-  <view wx:if="{{filtered.length === 0}}" class="card">
+  <view wx:if="{{filtered.length === 0}}" class="card empty-card">
     <view class="section-title">暂无匹配菜品</view>
     <view class="muted">试试更短的关键词，或直接新增一条菜谱。</view>
     <view class="button-primary" bindtap="goToNew">新增菜品</view>

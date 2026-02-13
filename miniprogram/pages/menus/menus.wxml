@@ -10,7 +10,7 @@
     <view class="button-primary" bindtap="addMenu">新增菜单</view>
   </view>
 
-  <view wx:if="{{menus.length === 0}}" class="card">
+  <view wx:if="{{menus.length === 0}}" class="card empty-card">
     <view class="section-title">暂无菜单</view>
     <view class="muted">可先创建一个“周末家宴”用于复用。</view>
   </view>

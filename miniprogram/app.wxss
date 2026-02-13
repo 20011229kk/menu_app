@@ -5,7 +5,7 @@ page {
 }
 
 .container {
-  padding: 16rpx 24rpx 80rpx;
+  padding: 20rpx 24rpx 100rpx;
 }
 
 .card {
@@ -35,6 +35,7 @@ page {
   padding: 14rpx 24rpx;
   font-weight: 600;
   display: inline-block;
+  margin-top: 12rpx;
 }
 
 .button-ghost {
@@ -45,11 +46,18 @@ page {
   display: inline-block;
 }
 
+.button-ghost + .button-ghost,
+.button-ghost + .button-primary,
+.button-primary + .button-ghost {
+  margin-left: 12rpx;
+}
+
 .input {
   border: 1rpx solid #e3d3bc;
   border-radius: 16rpx;
   padding: 16rpx 20rpx;
   background: #fff;
+  margin-top: 12rpx;
 }
 
 .row {
@@ -57,10 +65,29 @@ page {
   align-items: center;
   justify-content: space-between;
   gap: 16rpx;
+  flex-wrap: wrap;
 }
 
 .stack {
   display: flex;
   flex-direction: column;
   gap: 16rpx;
+}
+
+.badge {
+  padding: 4rpx 12rpx;
+  border-radius: 999rpx;
+  background: #f1d7a6;
+  color: #3b2c1a;
+  font-size: 22rpx;
+}
+
+.empty-card {
+  border: 1rpx dashed #e3d3bc;
+  background: #fffaf2;
+}
+
+.undo-bar {
+  border: 1rpx dashed #d9b889;
+  background: #fff4e1;
 }

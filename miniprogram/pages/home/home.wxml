@@ -21,7 +21,7 @@
     <view class="card" wx:for="{{categories}}" wx:key="id">
       <view class="row">
         <view class="section-title">{{item.name}}</view>
-        <view class="muted">{{categoryCounts[item.id] || 0}}</view>
+        <view class="badge">{{categoryCounts[item.id] || 0}}</view>
       </view>
       <view class="muted">{{categoryCounts[item.id] || 0}} 道菜</view>
       <view class="button-ghost" bindtap="goToDishes">查看菜品</view>
@@ -29,7 +29,7 @@
     <view class="card">
       <view class="row">
         <view class="section-title">未分类</view>
-        <view class="muted">{{categoryCounts.uncategorized || 0}}</view>
+        <view class="badge">{{categoryCounts.uncategorized || 0}}</view>
       </view>
       <view class="muted">{{categoryCounts.uncategorized || 0}} 道菜</view>
       <view class="button-ghost" bindtap="goToDishes">查看菜品</view>
