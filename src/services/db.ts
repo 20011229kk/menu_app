@@ -1,19 +1,18 @@
 import Dexie, { Table } from 'dexie'
-
-type AnyRecord = Record<string, unknown>
+import type { Category, Dish, Menu } from '../models'
 
 export class AppDB extends Dexie {
-  categories!: Table<AnyRecord, string>
-  dishes!: Table<AnyRecord, string>
-  menus!: Table<AnyRecord, string>
+  categories!: Table<Category, string>
+  dishes!: Table<Dish, string>
+  menus!: Table<Menu, string>
 
   constructor() {
     super('menu_app')
 
     this.version(1).stores({
-      categories: 'id, name, order, updatedAt',
-      dishes: 'id, name, categoryId, updatedAt',
-      menus: 'id, name, updatedAt'
+      categories: 'id, name, order, updatedAt, deletedAt',
+      dishes: 'id, name, categoryId, updatedAt, deletedAt',
+      menus: 'id, name, updatedAt, deletedAt'
     })
   }
 }
