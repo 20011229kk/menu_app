@@ -5,8 +5,8 @@
   </view>
 
   <view class="card">
-    <view class="section-title">本地图片</view>
-    <view class="muted">上传一张适合屏幕展示的图片</view>
+    <view class="section-title">这是我们的菜单</view>
+    <view class="muted">这是我们的菜单</view>
     <view class="row" style="margin-top: 12rpx;">
       <view class="button-ghost" bindtap="chooseGalleryImage">上传图片</view>
       <view wx:if="{{galleryImage}}" class="button-ghost" bindtap="removeGalleryImage">移除</view>
