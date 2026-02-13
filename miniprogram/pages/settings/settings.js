@@ -140,11 +140,23 @@ Page({
   },
 
   async createInviteCode() {
+    if (!wx.cloud) {
+      showError(null, '云开发未初始化')
+      return
+    }
+    wx.showLoading({ title: '生成中...' })
     try {
       const res = await createInvite()
+      if (!res || !res.code) {
+        showError(null, '生成邀请码失败')
+        return
+      }
       this.setData({ inviteCode: res.code || '', coupleId: res.coupleId || '' })
+      wx.showToast({ title: '邀请码已生成', icon: 'success' })
     } catch (error) {
       showError(error, '生成邀请码失败')
+    } finally {
+      wx.hideLoading()
     }
   },
 
@@ -154,6 +166,7 @@ Page({
       showError(null, '请输入邀请码')
       return
     }
+    wx.showLoading({ title: '加入中...' })
     try {
       const res = await joinInvite(code)
       if (!res.ok) {
@@ -164,10 +177,13 @@ Page({
       wx.showToast({ title: '已加入共享', icon: 'success' })
     } catch (error) {
       showError(error, '加入失败')
+    } finally {
+      wx.hideLoading()
     }
   },
 
   async syncNow() {
+    wx.showLoading({ title: '同步中...' })
     try {
       const res = await syncNow()
       if (res && res.ok) {
@@ -179,6 +195,8 @@ Page({
       }
     } catch (error) {
       showError(error, '同步失败')
+    } finally {
+      wx.hideLoading()
     }
   }
 })
