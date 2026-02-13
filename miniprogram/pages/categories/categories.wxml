@@ -1,6 +1,38 @@
 <view class="container">
   <view class="card">
-    <view class="section-title">${page}</view>
-    <view class="muted">页面骨架已建立</view>
+    <view class="section-title">分类</view>
+    <view class="muted">管理菜品分类并调整排序</view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">新增分类</view>
+    <input class="input" placeholder="例如：热菜" value="{{name}}" bindinput="onNameInput" />
+    <view class="button-primary" bindtap="addCategory">添加分类</view>
+  </view>
+
+  <view wx:if="{{categories.length === 0}}" class="card">
+    <view class="section-title">还没有分类</view>
+    <view class="muted">先创建常用分类（如热菜/凉菜/汤）。</view>
+  </view>
+
+  <view class="card" wx:for="{{categories}}" wx:key="id">
+    <view class="row">
+      <view wx:if="{{editingId === item.id}}">
+        <input class="input" value="{{editingName}}" bindinput="onEditInput" />
+      </view>
+      <view wx:else class="section-title">{{item.name}}</view>
+      <view class="row actions">
+        <view wx:if="{{editingId === item.id}}" class="button-ghost" bindtap="saveEdit">保存</view>
+        <view wx:else class="button-ghost" data-id="{{item.id}}" data-name="{{item.name}}" bindtap="startEdit">编辑</view>
+        <view class="button-ghost" data-id="{{item.id}}" data-direction="up" bindtap="moveCategory">上移</view>
+        <view class="button-ghost" data-id="{{item.id}}" data-direction="down" bindtap="moveCategory">下移</view>
+        <view class="button-ghost" data-id="{{item.id}}" bindtap="removeCategory">删除</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{lastDeleted}}" class="card undo-bar">
+    <view>已删除分类：{{lastDeleted.name}}</view>
+    <view class="button-ghost" bindtap="undoDelete">撤销</view>
   </view>
 </view>

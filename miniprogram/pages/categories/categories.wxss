@@ -1,0 +1,9 @@
+.actions {
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.undo-bar {
+  border: 1rpx dashed #d9b889;
+  background: #fff4e1;
+}
