@@ -1,0 +1,25 @@
+const { STORAGE_KEYS, writeList } = require('../utils/storage')
+
+function parsePayload(text) {
+  const payload = JSON.parse(text)
+  if (!payload || !Array.isArray(payload.categories) || !Array.isArray(payload.dishes) || !Array.isArray(payload.menus)) {
+    throw new Error('导入文件格式不正确')
+  }
+  return payload
+}
+
+function importJson(text) {
+  const payload = parsePayload(text)
+  writeList(STORAGE_KEYS.categories, payload.categories)
+  writeList(STORAGE_KEYS.dishes, payload.dishes)
+  writeList(STORAGE_KEYS.menus, payload.menus)
+  return {
+    categories: payload.categories.length,
+    dishes: payload.dishes.length,
+    menus: payload.menus.length
+  }
+}
+
+module.exports = {
+  importJson
+}

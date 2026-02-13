@@ -1,6 +1,19 @@
 <view class="container">
   <view class="card">
-    <view class="section-title">${page}</view>
-    <view class="muted">页面骨架已建立</view>
+    <view class="section-title">设置</view>
+    <view class="muted">导出/导入数据</view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">数据导出</view>
+    <view class="muted">导出为 JSON 文件用于备份</view>
+    <view class="button-primary" bindtap="exportData">导出 JSON</view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">数据导入</view>
+    <view class="muted">从 JSON 备份恢复数据（将覆盖当前数据）</view>
+    <view class="button-ghost" bindtap="importData">选择文件</view>
+    <view wx:if="{{importResult}}" class="muted">{{importResult}}</view>
   </view>
 </view>
