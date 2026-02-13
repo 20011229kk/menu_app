@@ -5,7 +5,7 @@ const { on, off } = require('../../utils/events')
 Page({
   data: {
     menu: null,
-    dishes: []
+    items: []
   },
 
   onLoad(query) {
@@ -27,7 +27,15 @@ Page({
   loadData() {
     const menu = listMenus().find((item) => item.id === this.menuId)
     const dishes = listDishes()
-    this.setData({ menu, dishes })
+    const dishMap = {}
+    dishes.forEach((dish) => {
+      dishMap[dish.id] = dish.name
+    })
+    const items = (menu ? menu.items : []).map((item) => ({
+      ...item,
+      dishName: dishMap[item.dishId] || '菜品已删除'
+    }))
+    this.setData({ menu, items })
   },
 
   goToEdit() {
