@@ -23,8 +23,13 @@
   </view>
 
   <view class="card" wx:for="{{filtered}}" wx:key="id">
-    <view class="section-title">{{item.name}}</view>
-    <view class="muted">{{item.description || '暂无简介'}}</view>
-    <view class="button-ghost" data-id="{{item.id}}" bindtap="goToDetail">查看详情</view>
+    <view class="row">
+      <image wx:if="{{item.coverImage}}" class="thumb" mode="aspectFill" src="{{item.coverImage}}" />
+      <view class="stack" style="flex: 1;">
+        <view class="section-title">{{item.name}}</view>
+        <view class="muted">{{item.description || '暂无简介'}}</view>
+      </view>
+      <view class="button-ghost" data-id="{{item.id}}" bindtap="goToDetail">查看详情</view>
+    </view>
   </view>
 </view>
