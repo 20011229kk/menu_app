@@ -2,10 +2,12 @@ const { exportJson } = require('../../services/exportService')
 const { importJson } = require('../../services/importService')
 const { emit } = require('../../utils/events')
 const { showError } = require('../../utils/errors')
+const { chooseSingleImage, saveImage } = require('../../utils/files')
 
 Page({
   data: {
-    importResult: ''
+    importResult: '',
+    galleryImage: ''
   },
 
   exportData() {
@@ -66,5 +68,19 @@ Page({
         })
       }
     })
+  },
+
+  async chooseGalleryImage() {
+    try {
+      const tempPath = await chooseSingleImage()
+      const savedPath = await saveImage(tempPath)
+      this.setData({ galleryImage: savedPath })
+    } catch (error) {
+      showError(error, '选择图片失败')
+    }
+  },
+
+  removeGalleryImage() {
+    this.setData({ galleryImage: '' })
   }
 })

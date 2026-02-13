@@ -1,7 +1,20 @@
 <view class="container">
+  <view class="hero">
+    <view class="hero-title">这是我们的菜单</view>
+    <view class="hero-subtitle">把喜欢的菜留在这里，随时翻看与更新。</view>
+  </view>
+
   <view class="card">
-    <view class="section-title">设置</view>
-    <view class="muted">导出/导入数据</view>
+    <view class="section-title">菜单展示图</view>
+    <view class="muted">上传一张适合屏幕展示的图片</view>
+    <view class="row" style="margin-top: 12rpx;">
+      <view class="button-ghost" bindtap="chooseGalleryImage">上传图片</view>
+      <view wx:if="{{galleryImage}}" class="button-ghost" bindtap="removeGalleryImage">移除</view>
+    </view>
+    <image wx:if="{{galleryImage}}" class="gallery" mode="aspectFill" src="{{galleryImage}}" />
+    <view wx:if="{{!galleryImage}}" class="empty-card" style="margin-top: 12rpx;">
+      <view class="muted">尚未上传图片</view>
+    </view>
   </view>
 
   <view class="card">
