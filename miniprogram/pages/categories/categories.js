@@ -7,6 +7,7 @@ const {
 } = require('../../services/categoryService')
 const { validateRequired, validateUnique } = require('../../utils/validation')
 const { on, off } = require('../../utils/events')
+const { confirmDelete } = require('../../utils/confirm')
 
 Page({
   data: {
@@ -101,9 +102,11 @@ Page({
     this.refresh()
   },
 
-  removeCategory(event) {
+  async removeCategory(event) {
     const { id } = event.currentTarget.dataset
     const current = this.data.categories.find((item) => item.id === id)
+    const confirmed = await confirmDelete('删除分类后菜品将转为未分类')
+    if (!confirmed) return
     deleteCategory(id)
     this.setData({ lastDeleted: current || null })
     this.refresh()

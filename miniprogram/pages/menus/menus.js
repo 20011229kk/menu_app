@@ -1,6 +1,7 @@
 const { listMenus, createMenu, deleteMenu, restoreMenu } = require('../../services/menuService')
 const { validateRequired, validateUnique } = require('../../utils/validation')
 const { on, off } = require('../../utils/events')
+const { confirmDelete } = require('../../utils/confirm')
 
 Page({
   data: {
@@ -61,19 +62,14 @@ Page({
     wx.navigateTo({ url: `/pages/menu-edit/menu-edit?id=${id}` })
   },
 
-  removeMenu(event) {
+  async removeMenu(event) {
     const { id } = event.currentTarget.dataset
     const current = this.data.menus.find((item) => item.id === id)
-    wx.showModal({
-      title: '确认删除',
-      content: '删除后可撤销',
-      success: (res) => {
-        if (!res.confirm) return
-        deleteMenu(id)
-        this.setData({ lastDeleted: current || null })
-        this.refresh()
-      }
-    })
+    const confirmed = await confirmDelete('删除后可撤销')
+    if (!confirmed) return
+    deleteMenu(id)
+    this.setData({ lastDeleted: current || null })
+    this.refresh()
   },
 
   undoDelete() {
