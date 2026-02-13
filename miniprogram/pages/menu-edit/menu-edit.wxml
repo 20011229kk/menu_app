@@ -11,6 +11,16 @@
 
   <view class="card">
     <view class="row">
+      <view class="section-title">菜单封面</view>
+      <view class="button-ghost" bindtap="chooseCoverImage">选择图片</view>
+    </view>
+    <image wx:if="{{coverImage}}" class="cover" mode="aspectFill" src="{{coverImage}}" />
+    <view wx:if="{{coverImage}}" class="button-ghost" bindtap="removeCoverImage">移除图片</view>
+    <view wx:if="{{!coverImage}}" class="muted">未设置封面</view>
+  </view>
+
+  <view class="card">
+    <view class="row">
       <view class="section-title">添加菜品</view>
     </view>
     <picker mode="selector" range="{{dishes}}" range-key="name" bindchange="onDishSelect">

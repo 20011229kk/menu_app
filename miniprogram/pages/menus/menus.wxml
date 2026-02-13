@@ -17,6 +17,7 @@
   </view>
 
   <view class="card" wx:for="{{menus}}" wx:key="id">
+    <image wx:if="{{item.coverImage}}" class="cover" mode="aspectFill" src="{{item.coverImage}}" />
     <view class="section-title">{{item.name}}</view>
     <view class="muted">{{item.items.length}} 道菜</view>
     <view class="row">

@@ -69,6 +69,7 @@ function normalizeMenus(menus) {
     ...item,
     id: item.id || generateId(),
     name: String(item.name || '').trim(),
+    coverImage: item.coverImage || '',
     items: normalizeMenuItems(item.items),
     updatedAt: item.updatedAt || nowIso(),
     createdAt: item.createdAt || nowIso()

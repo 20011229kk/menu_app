@@ -1,6 +1,7 @@
 <view class="container">
   <view wx:if="{{menu}}" class="stack">
     <view class="card">
+      <image wx:if="{{menu.coverImage}}" class="cover" mode="aspectFill" src="{{menu.coverImage}}" />
       <view class="section-title">{{menu.name}}</view>
       <view class="muted">查看菜品清单与顺序</view>
       <view class="button-ghost" bindtap="goToEdit">编辑</view>

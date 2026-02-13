@@ -2,3 +2,10 @@
   border: 1rpx dashed #d9b889;
   background: #fff4e1;
 }
+
+.cover {
+  width: 100%;
+  height: 240rpx;
+  border-radius: 16rpx;
+  margin-bottom: 12rpx;
+}
