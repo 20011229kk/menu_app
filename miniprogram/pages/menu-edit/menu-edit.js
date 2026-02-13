@@ -2,6 +2,7 @@ const { listMenus, updateMenu } = require('../../services/menuService')
 const { listDishes } = require('../../services/dishService')
 const { generateId } = require('../../utils/id')
 const { validateRequired, validateUnique } = require('../../utils/validation')
+const { on, off } = require('../../utils/events')
 
 Page({
   data: {
@@ -14,11 +15,24 @@ Page({
   },
 
   onLoad(query) {
+    this._menuId = query.id
+    this._dataChangedHandler = () => this.refreshData()
+    on('data:changed', this._dataChangedHandler)
+    this.refreshData()
+  },
+
+  onUnload() {
+    if (this._dataChangedHandler) {
+      off('data:changed', this._dataChangedHandler)
+    }
+  },
+
+  refreshData() {
     const menus = listMenus()
-    const menu = menus.find((item) => item.id === query.id)
+    const menu = menus.find((item) => item.id === this._menuId)
     const dishes = listDishes()
     this.setData({
-      id: query.id,
+      id: this._menuId,
       name: menu ? menu.name : '',
       dishes,
       menuItems: menu ? menu.items : []

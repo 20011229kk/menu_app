@@ -1,5 +1,6 @@
 const { listDishes } = require('../../services/dishService')
 const { listCategories } = require('../../services/categoryService')
+const { on, off } = require('../../utils/events')
 
 Page({
   data: {
@@ -13,8 +14,19 @@ Page({
     filtered: []
   },
 
+  onLoad() {
+    this._dataChangedHandler = () => this.refresh()
+    on('data:changed', this._dataChangedHandler)
+  },
+
   onShow() {
     this.refresh()
+  },
+
+  onUnload() {
+    if (this._dataChangedHandler) {
+      off('data:changed', this._dataChangedHandler)
+    }
   },
 
   refresh() {

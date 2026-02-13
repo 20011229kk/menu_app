@@ -2,6 +2,7 @@ const { createDish, updateDish, listDishes } = require('../../services/dishServi
 const { listCategories } = require('../../services/categoryService')
 const { generateId } = require('../../utils/id')
 const { validateRequired, validateIngredients, validateSteps } = require('../../utils/validation')
+const { on, off } = require('../../utils/events')
 
 Page({
   data: {
@@ -21,12 +22,25 @@ Page({
   },
 
   onLoad(query) {
+    this._dishId = query.id || ''
+    this._dataChangedHandler = () => this.refreshData()
+    on('data:changed', this._dataChangedHandler)
+    this.refreshData()
+  },
+
+  onUnload() {
+    if (this._dataChangedHandler) {
+      off('data:changed', this._dataChangedHandler)
+    }
+  },
+
+  refreshData() {
     const categories = listCategories().sort((a, b) => a.order - b.order)
     const categoryOptions = [{ id: '', name: '未分类' }, ...categories]
     this.setData({ categoryOptions })
 
-    if (query.id) {
-      const dish = listDishes().find((item) => item.id === query.id)
+    if (this._dishId) {
+      const dish = listDishes().find((item) => item.id === this._dishId)
       if (dish) {
         const index = categoryOptions.findIndex((item) => item.id === (dish.categoryId || ''))
         this.setData({

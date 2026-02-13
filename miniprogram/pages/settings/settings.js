@@ -1,5 +1,6 @@
 const { exportJson } = require('../../services/exportService')
 const { importJson } = require('../../services/importService')
+const { emit } = require('../../utils/events')
 
 Page({
   data: {
@@ -44,6 +45,7 @@ Page({
               this.setData({
                 importResult: `已导入：分类 ${stats.categories}，菜品 ${stats.dishes}，菜单 ${stats.menus}`
               })
+              emit('data:changed')
               wx.showToast({ title: '导入成功', icon: 'success' })
             } catch (error) {
               const message = error && error.message ? error.message : '导入失败'

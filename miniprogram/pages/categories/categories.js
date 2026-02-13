@@ -6,6 +6,7 @@ const {
   restoreCategory
 } = require('../../services/categoryService')
 const { validateRequired, validateUnique } = require('../../utils/validation')
+const { on, off } = require('../../utils/events')
 
 Page({
   data: {
@@ -17,8 +18,19 @@ Page({
     error: ''
   },
 
+  onLoad() {
+    this._dataChangedHandler = () => this.refresh()
+    on('data:changed', this._dataChangedHandler)
+  },
+
   onShow() {
     this.refresh()
+  },
+
+  onUnload() {
+    if (this._dataChangedHandler) {
+      off('data:changed', this._dataChangedHandler)
+    }
   },
 
   refresh() {

@@ -1,4 +1,5 @@
 const { listDishes, deleteDish, restoreDish } = require('../../services/dishService')
+const { on, off } = require('../../utils/events')
 
 Page({
   data: {
@@ -8,10 +9,18 @@ Page({
 
   onLoad(query) {
     this.dishId = query.id
+    this._dataChangedHandler = () => this.loadDish()
+    on('data:changed', this._dataChangedHandler)
   },
 
   onShow() {
     this.loadDish()
+  },
+
+  onUnload() {
+    if (this._dataChangedHandler) {
+      off('data:changed', this._dataChangedHandler)
+    }
   },
 
   loadDish() {

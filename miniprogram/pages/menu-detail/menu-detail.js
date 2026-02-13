@@ -1,5 +1,6 @@
 const { listMenus } = require('../../services/menuService')
 const { listDishes } = require('../../services/dishService')
+const { on, off } = require('../../utils/events')
 
 Page({
   data: {
@@ -9,10 +10,18 @@ Page({
 
   onLoad(query) {
     this.menuId = query.id
+    this._dataChangedHandler = () => this.loadData()
+    on('data:changed', this._dataChangedHandler)
   },
 
   onShow() {
     this.loadData()
+  },
+
+  onUnload() {
+    if (this._dataChangedHandler) {
+      off('data:changed', this._dataChangedHandler)
+    }
   },
 
   loadData() {
