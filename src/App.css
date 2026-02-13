@@ -197,6 +197,17 @@ body {
   display: inline-flex;
 }
 
+.undo-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px dashed #d9b889;
+  background: #fff4e1;
+}
+
 .search-input {
   width: 100%;
   padding: 10px 12px;

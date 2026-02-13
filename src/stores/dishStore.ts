@@ -1,22 +1,26 @@
 import { create } from 'zustand'
 import type { Dish } from '../models'
 import { createDish, deleteDish, getDish, listDishes, updateDish } from '../services/dishService'
+import { restoreDish } from '../services/restoreService'
 import { sortDishes } from '../utils/sort'
 
 interface DishState {
   dishes: Dish[]
   loading: boolean
+  lastDeleted?: Dish
   load: () => Promise<void>
   getById: (id: string) => Promise<Dish | undefined>
   add: (input: Parameters<typeof createDish>[0]) => Promise<Dish>
   update: (id: string, updates: Partial<Dish>) => Promise<Dish>
   remove: (id: string) => Promise<void>
   sorted: (mode: 'name' | 'updatedAt') => Dish[]
+  undoDelete: () => Promise<void>
 }
 
 export const useDishStore = create<DishState>((set, get) => ({
   dishes: [],
   loading: false,
+  lastDeleted: undefined,
   load: async () => {
     set({ loading: true })
     const items = await listDishes()
@@ -40,8 +44,17 @@ export const useDishStore = create<DishState>((set, get) => ({
     return dish
   },
   remove: async (id) => {
+    const current = get().dishes.find((item) => item.id === id)
     await deleteDish(id)
+    set({ lastDeleted: current })
     await get().load()
   },
-  sorted: (mode) => sortDishes(get().dishes, mode)
+  sorted: (mode) => sortDishes(get().dishes, mode),
+  undoDelete: async () => {
+    const last = get().lastDeleted
+    if (!last) return
+    await restoreDish(last.id)
+    set({ lastDeleted: undefined })
+    await get().load()
+  }
 }))

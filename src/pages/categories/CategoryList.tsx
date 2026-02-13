@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useCategoryStore } from '../../stores/categoryStore'
 
 export function CategoryListPage() {
-  const { categories, load, add, rename, remove, move } = useCategoryStore()
+  const { categories, lastDeleted, load, add, rename, remove, move, undoDelete } = useCategoryStore()
   const [name, setName] = useState('')
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingName, setEditingName] = useState('')
@@ -91,6 +91,15 @@ export function CategoryListPage() {
           </div>
         ))}
       </div>
+
+      {lastDeleted && (
+        <div className="undo-bar">
+          <span>已删除分类：{lastDeleted.name}</span>
+          <button className="ghost-button" type="button" onClick={() => void undoDelete()}>
+            撤销
+          </button>
+        </div>
+      )}
     </section>
   )
 }

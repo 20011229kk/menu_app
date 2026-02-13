@@ -1,16 +1,19 @@
 import { create } from 'zustand'
 import type { Category } from '../models'
 import { createCategory, deleteCategory, listCategories, updateCategory } from '../services/categoryService'
+import { restoreCategory } from '../services/restoreService'
 import { sortCategories } from '../utils/sort'
 
 interface CategoryState {
   categories: Category[]
   loading: boolean
+  lastDeleted?: Category
   load: () => Promise<void>
   add: (name: string) => Promise<void>
   rename: (id: string, name: string) => Promise<void>
   remove: (id: string) => Promise<void>
   move: (id: string, direction: 'up' | 'down') => Promise<void>
+  undoDelete: () => Promise<void>
 }
 
 function normalizeCategories(items: Category[]): Category[] {
@@ -20,6 +23,7 @@ function normalizeCategories(items: Category[]): Category[] {
 export const useCategoryStore = create<CategoryState>((set, get) => ({
   categories: [],
   loading: false,
+  lastDeleted: undefined,
   load: async () => {
     set({ loading: true })
     const items = await listCategories()
@@ -44,7 +48,9 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     await get().load()
   },
   remove: async (id: string) => {
+    const current = get().categories.find((item) => item.id === id)
     await deleteCategory(id)
+    set({ lastDeleted: current })
     await get().load()
   },
   move: async (id: string, direction: 'up' | 'down') => {
@@ -58,6 +64,13 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     const target = items[targetIndex]
     await updateCategory(current.id, { order: target.order })
     await updateCategory(target.id, { order: current.order })
+    await get().load()
+  },
+  undoDelete: async () => {
+    const last = get().lastDeleted
+    if (!last) return
+    await restoreCategory(last.id)
+    set({ lastDeleted: undefined })
     await get().load()
   }
 }))

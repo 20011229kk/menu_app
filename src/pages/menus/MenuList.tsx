@@ -4,7 +4,7 @@ import { useMenuStore } from '../../stores/menuStore'
 
 export function MenuListPage() {
   const navigate = useNavigate()
-  const { menus, load, add, remove } = useMenuStore()
+  const { menus, lastDeleted, load, add, remove, undoDelete } = useMenuStore()
   const [name, setName] = useState('')
 
   useEffect(() => {
@@ -61,6 +61,15 @@ export function MenuListPage() {
           </div>
         ))}
       </div>
+
+      {lastDeleted && (
+        <div className="undo-bar">
+          <span>已删除菜单：{lastDeleted.name}</span>
+          <button className="ghost-button" type="button" onClick={() => void undoDelete()}>
+            撤销
+          </button>
+        </div>
+      )}
     </section>
   )
 }

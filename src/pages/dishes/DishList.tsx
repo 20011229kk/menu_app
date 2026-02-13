@@ -9,7 +9,7 @@ import { addRecentSearch, clearRecentSearches, getRecentSearches } from '../../u
 export function DishListPage() {
   const navigate = useNavigate()
   const { categories, load: loadCategories } = useCategoryStore()
-  const { dishes, load: loadDishes, sorted } = useDishStore()
+  const { dishes, lastDeleted, load: loadDishes, sorted, undoDelete } = useDishStore()
   const [query, setQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [recentSearches, setRecentSearches] = useState<string[]>([])
@@ -169,6 +169,15 @@ export function DishListPage() {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {lastDeleted && (
+        <div className="undo-bar">
+          <span>已删除菜品：{lastDeleted.name}</span>
+          <button className="ghost-button" type="button" onClick={() => void undoDelete()}>
+            撤销
+          </button>
         </div>
       )}
     </section>
