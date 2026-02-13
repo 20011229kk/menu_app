@@ -25,6 +25,22 @@ Page({
     shareExpanded: false
   },
 
+  onLoad() {
+    this._loading = false
+  },
+
+  startLoading(title) {
+    if (this._loading) return
+    this._loading = true
+    wx.showLoading({ title: title || '处理中...' })
+  },
+
+  stopLoading() {
+    if (!this._loading) return
+    this._loading = false
+    wx.hideLoading()
+  },
+
   onShow() {
     const saved = wx.getStorageSync('menu_app_gallery_image')
     const syncEnabled = getSyncEnabled()
@@ -140,7 +156,7 @@ Page({
   },
 
   async createInviteCode() {
-    wx.showLoading({ title: '生成中...' })
+    this.startLoading('生成中...')
     try {
       if (!wx.cloud) {
         throw new Error('云开发未初始化')
@@ -154,7 +170,7 @@ Page({
     } catch (error) {
       showError(error, '生成邀请码失败')
     } finally {
-      wx.hideLoading()
+      this.stopLoading()
     }
   },
 
@@ -164,7 +180,7 @@ Page({
       showError(null, '请输入邀请码')
       return
     }
-    wx.showLoading({ title: '加入中...' })
+    this.startLoading('加入中...')
     try {
       const res = await joinInvite(code)
       if (!res.ok) {
@@ -175,12 +191,12 @@ Page({
     } catch (error) {
       showError(error, '加入失败')
     } finally {
-      wx.hideLoading()
+      this.stopLoading()
     }
   },
 
   async syncNow() {
-    wx.showLoading({ title: '同步中...' })
+    this.startLoading('同步中...')
     try {
       const res = await syncNow()
       if (res && res.ok) {
@@ -193,7 +209,7 @@ Page({
     } catch (error) {
       showError(error, '同步失败')
     } finally {
-      wx.hideLoading()
+      this.stopLoading()
     }
   }
 })
