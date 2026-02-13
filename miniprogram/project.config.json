@@ -1,8 +1,9 @@
 {
   "miniprogramRoot": "",
+  "cloudfunctionRoot": "../cloudfunctions/",
   "projectname": "menu_app",
   "description": "离线优先菜单/菜谱管理",
-  "appid": "touristappid",
+  "appid": "wx444d1983fbadc2d1",
   "setting": {
     "urlCheck": false,
     "es6": true,

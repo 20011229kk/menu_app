@@ -1,6 +1,7 @@
 const { STORAGE_KEYS, readList, writeList } = require('../utils/storage')
 const { generateId } = require('../utils/id')
 const { nowIso } = require('../utils/time')
+const { scheduleSync } = require('../utils/sync')
 
 function listDishes() {
   return readList(STORAGE_KEYS.dishes).filter((item) => !item.deletedAt)
@@ -27,6 +28,7 @@ function createDish(input) {
   const list = readList(STORAGE_KEYS.dishes)
   list.push(dish)
   writeList(STORAGE_KEYS.dishes, list)
+  scheduleSync()
   return dish
 }
 
@@ -44,6 +46,7 @@ function updateDish(id, updates) {
     }
   })
   writeList(STORAGE_KEYS.dishes, next)
+  scheduleSync()
 }
 
 function deleteDish(id) {
@@ -53,6 +56,7 @@ function deleteDish(id) {
     return { ...item, deletedAt: nowIso(), updatedAt: nowIso() }
   })
   writeList(STORAGE_KEYS.dishes, next)
+  scheduleSync()
 }
 
 function restoreDish(id) {
@@ -62,6 +66,7 @@ function restoreDish(id) {
     return { ...item, deletedAt: null, updatedAt: nowIso() }
   })
   writeList(STORAGE_KEYS.dishes, next)
+  scheduleSync()
 }
 
 module.exports = {

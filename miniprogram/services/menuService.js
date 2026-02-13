@@ -1,6 +1,7 @@
 const { STORAGE_KEYS, readList, writeList } = require('../utils/storage')
 const { generateId } = require('../utils/id')
 const { nowIso } = require('../utils/time')
+const { scheduleSync } = require('../utils/sync')
 
 function listMenus() {
   return readList(STORAGE_KEYS.menus).filter((item) => !item.deletedAt)
@@ -20,6 +21,7 @@ function createMenu(name, coverImage) {
   const list = readList(STORAGE_KEYS.menus)
   list.push(menu)
   writeList(STORAGE_KEYS.menus, list)
+  scheduleSync()
   return menu
 }
 
@@ -35,6 +37,7 @@ function updateMenu(id, updates) {
     }
   })
   writeList(STORAGE_KEYS.menus, next)
+  scheduleSync()
 }
 
 function deleteMenu(id) {
@@ -44,6 +47,7 @@ function deleteMenu(id) {
     return { ...item, deletedAt: nowIso(), updatedAt: nowIso() }
   })
   writeList(STORAGE_KEYS.menus, next)
+  scheduleSync()
 }
 
 function restoreMenu(id) {
@@ -53,6 +57,7 @@ function restoreMenu(id) {
     return { ...item, deletedAt: null, updatedAt: nowIso() }
   })
   writeList(STORAGE_KEYS.menus, next)
+  scheduleSync()
 }
 
 module.exports = {

@@ -1,6 +1,7 @@
 const { STORAGE_KEYS, readList, writeList } = require('../utils/storage')
 const { generateId } = require('../utils/id')
 const { nowIso } = require('../utils/time')
+const { scheduleSync } = require('../utils/sync')
 
 function listCategories() {
   return readList(STORAGE_KEYS.categories).filter((item) => !item.deletedAt)
@@ -19,6 +20,7 @@ function createCategory(name, order) {
   const list = readList(STORAGE_KEYS.categories)
   list.push(category)
   writeList(STORAGE_KEYS.categories, list)
+  scheduleSync()
   return category
 }
 
@@ -34,6 +36,7 @@ function updateCategory(id, updates) {
     }
   })
   writeList(STORAGE_KEYS.categories, next)
+  scheduleSync()
 }
 
 function deleteCategory(id) {
@@ -50,6 +53,7 @@ function deleteCategory(id) {
   })
   writeList(STORAGE_KEYS.categories, nextCategories)
   writeList(STORAGE_KEYS.dishes, nextDishes)
+  scheduleSync()
 }
 
 function restoreCategory(id) {
@@ -59,6 +63,7 @@ function restoreCategory(id) {
     return { ...item, deletedAt: null, updatedAt: nowIso() }
   })
   writeList(STORAGE_KEYS.categories, next)
+  scheduleSync()
 }
 
 module.exports = {
