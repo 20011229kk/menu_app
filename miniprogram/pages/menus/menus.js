@@ -1,10 +1,12 @@
 const { listMenus, createMenu, deleteMenu, restoreMenu } = require('../../services/menuService')
+const { validateRequired, validateUnique } = require('../../utils/validation')
 
 Page({
   data: {
     name: '',
     menus: [],
-    lastDeleted: null
+    lastDeleted: null,
+    error: ''
   },
 
   onShow() {
@@ -22,17 +24,18 @@ Page({
 
   addMenu() {
     const name = this.data.name.trim()
-    if (!name) {
-      wx.showToast({ title: '菜单名不能为空', icon: 'none' })
+    const requiredError = validateRequired(name, '菜单名')
+    if (requiredError) {
+      this.setData({ error: requiredError })
       return
     }
-    const exists = this.data.menus.find((item) => item.name === name)
-    if (exists) {
-      wx.showToast({ title: '菜单名已存在', icon: 'none' })
+    const uniqueError = validateUnique(name, this.data.menus, '菜单名')
+    if (uniqueError) {
+      this.setData({ error: uniqueError })
       return
     }
     const menu = createMenu(name)
-    this.setData({ name: '' })
+    this.setData({ name: '', error: '' })
     wx.navigateTo({ url: `/pages/menu-edit/menu-edit?id=${menu.id}` })
   },
 

@@ -5,6 +5,7 @@ const {
   deleteCategory,
   restoreCategory
 } = require('../../services/categoryService')
+const { validateRequired, validateUnique } = require('../../utils/validation')
 
 Page({
   data: {
@@ -12,7 +13,8 @@ Page({
     name: '',
     editingId: '',
     editingName: '',
-    lastDeleted: null
+    lastDeleted: null,
+    error: ''
   },
 
   onShow() {
@@ -30,18 +32,19 @@ Page({
 
   addCategory() {
     const name = this.data.name.trim()
-    if (!name) {
-      wx.showToast({ title: '分类名不能为空', icon: 'none' })
+    const requiredError = validateRequired(name, '分类名')
+    if (requiredError) {
+      this.setData({ error: requiredError })
       return
     }
-    const exists = this.data.categories.find((item) => item.name === name)
-    if (exists) {
-      wx.showToast({ title: '分类名已存在', icon: 'none' })
+    const uniqueError = validateUnique(name, this.data.categories, '分类名')
+    if (uniqueError) {
+      this.setData({ error: uniqueError })
       return
     }
     const maxOrder = this.data.categories.reduce((max, item) => Math.max(max, item.order), 0)
     createCategory(name, maxOrder + 1)
-    this.setData({ name: '' })
+    this.setData({ name: '', error: '' })
     this.refresh()
   },
 
@@ -58,17 +61,18 @@ Page({
     const { editingId, editingName, categories } = this.data
     if (!editingId) return
     const name = editingName.trim()
-    if (!name) {
-      wx.showToast({ title: '分类名不能为空', icon: 'none' })
+    const requiredError = validateRequired(name, '分类名')
+    if (requiredError) {
+      this.setData({ error: requiredError })
       return
     }
-    const exists = categories.find((item) => item.name === name && item.id !== editingId)
-    if (exists) {
-      wx.showToast({ title: '分类名已存在', icon: 'none' })
+    const uniqueError = validateUnique(name, categories, '分类名', editingId)
+    if (uniqueError) {
+      this.setData({ error: uniqueError })
       return
     }
     updateCategory(editingId, { name })
-    this.setData({ editingId: '', editingName: '' })
+    this.setData({ editingId: '', editingName: '', error: '' })
     this.refresh()
   },
 

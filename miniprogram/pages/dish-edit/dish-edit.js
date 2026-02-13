@@ -1,6 +1,7 @@
 const { createDish, updateDish, listDishes } = require('../../services/dishService')
 const { listCategories } = require('../../services/categoryService')
 const { generateId } = require('../../utils/id')
+const { validateRequired, validateIngredients, validateSteps } = require('../../utils/validation')
 
 Page({
   data: {
@@ -15,7 +16,8 @@ Page({
     difficulty: '',
     tips: '',
     ingredients: [],
-    steps: []
+    steps: [],
+    error: ''
   },
 
   onLoad(query) {
@@ -130,20 +132,22 @@ Page({
 
   saveDish() {
     const name = this.data.name.trim()
-    if (!name) {
-      wx.showToast({ title: '菜名不能为空', icon: 'none' })
+    const requiredError = validateRequired(name, '菜名')
+    if (requiredError) {
+      this.setData({ error: requiredError })
       return
     }
-    const invalidIngredient = this.data.ingredients.find((item) => !String(item.name).trim())
-    if (invalidIngredient) {
-      wx.showToast({ title: '用料名称不能为空', icon: 'none' })
+    const ingredientError = validateIngredients(this.data.ingredients)
+    if (ingredientError) {
+      this.setData({ error: ingredientError })
       return
     }
-    const invalidStep = this.data.steps.find((item) => !String(item.content).trim())
-    if (invalidStep) {
-      wx.showToast({ title: '步骤内容不能为空', icon: 'none' })
+    const stepError = validateSteps(this.data.steps)
+    if (stepError) {
+      this.setData({ error: stepError })
       return
     }
+    this.setData({ error: '' })
 
     const payload = {
       name,

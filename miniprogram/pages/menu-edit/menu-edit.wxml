@@ -33,4 +33,5 @@
   </view>
 
   <view class="button-primary" bindtap="saveMenu">保存菜单</view>
+  <view wx:if="{{error}}" class="error">{{error}}</view>
 </view>

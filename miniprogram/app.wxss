@@ -91,3 +91,9 @@ page {
   border: 1rpx dashed #d9b889;
   background: #fff4e1;
 }
+
+.error {
+  color: #8f2a2a;
+  font-size: 24rpx;
+  margin-top: 12rpx;
+}

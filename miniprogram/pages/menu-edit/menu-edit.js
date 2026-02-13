@@ -1,6 +1,7 @@
 const { listMenus, updateMenu } = require('../../services/menuService')
 const { listDishes } = require('../../services/dishService')
 const { generateId } = require('../../utils/id')
+const { validateRequired, validateUnique } = require('../../utils/validation')
 
 Page({
   data: {
@@ -8,7 +9,8 @@ Page({
     name: '',
     dishes: [],
     menuItems: [],
-    selectedDishIndex: 0
+    selectedDishIndex: 0,
+    error: ''
   },
 
   onLoad(query) {
@@ -81,10 +83,17 @@ Page({
 
   saveMenu() {
     const name = this.data.name.trim()
-    if (!name) {
-      wx.showToast({ title: '菜单名不能为空', icon: 'none' })
+    const requiredError = validateRequired(name, '菜单名')
+    if (requiredError) {
+      this.setData({ error: requiredError })
       return
     }
+    const uniqueError = validateUnique(name, listMenus(), '菜单名', this.data.id)
+    if (uniqueError) {
+      this.setData({ error: uniqueError })
+      return
+    }
+    this.setData({ error: '' })
     updateMenu(this.data.id, { name, items: this.data.menuItems })
     wx.navigateBack()
   }

@@ -8,6 +8,7 @@
     <view class="section-title">新增菜单</view>
     <input class="input" placeholder="例如：周末家宴" value="{{name}}" bindinput="onNameInput" />
     <view class="button-primary" bindtap="addMenu">新增菜单</view>
+    <view wx:if="{{error}}" class="error">{{error}}</view>
   </view>
 
   <view wx:if="{{menus.length === 0}}" class="card empty-card">

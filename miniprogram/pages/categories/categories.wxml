@@ -8,6 +8,7 @@
     <view class="section-title">新增分类</view>
     <input class="input" placeholder="例如：热菜" value="{{name}}" bindinput="onNameInput" />
     <view class="button-primary" bindtap="addCategory">添加分类</view>
+    <view wx:if="{{error}}" class="error">{{error}}</view>
   </view>
 
   <view wx:if="{{categories.length === 0}}" class="card empty-card">
