@@ -51,8 +51,14 @@ export function CategoryListPage() {
         </button>
       </form>
 
+      {categories.length === 0 && (
+        <div className="empty-card">
+          <h3>还没有分类</h3>
+          <p className="muted">先创建常用分类（如热菜/凉菜/汤）。</p>
+        </div>
+      )}
+
       <div className="panel">
-        {categories.length === 0 && <div className="empty">暂无分类</div>}
         {categories.map((category) => (
           <div className="panel-row" key={category.id}>
             {editingId === category.id ? (

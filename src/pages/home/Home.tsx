@@ -57,7 +57,10 @@ export function HomePage() {
         <div className="card-grid">
           {sortedCategories.map((category) => (
             <div className="card" key={category.id}>
-              <h3>{category.name}</h3>
+              <div className="card-title">
+                <h3>{category.name}</h3>
+                <span className="muted">{categorySummary.get(category.id) ?? 0}</span>
+              </div>
               <p>{categorySummary.get(category.id) ?? 0} 道菜</p>
               <Link className="ghost-button" to="/dishes">
                 查看菜品
@@ -65,7 +68,10 @@ export function HomePage() {
             </div>
           ))}
           <div className="card">
-            <h3>未分类</h3>
+            <div className="card-title">
+              <h3>未分类</h3>
+              <span className="muted">{categorySummary.get('uncategorized') ?? 0}</span>
+            </div>
             <p>{categorySummary.get('uncategorized') ?? 0} 道菜</p>
             <Link className="ghost-button" to="/dishes">
               查看菜品

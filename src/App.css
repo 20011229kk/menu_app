@@ -99,6 +99,12 @@ body {
   box-shadow: 0 6px 18px rgba(80, 50, 20, 0.08);
 }
 
+.card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .panel {
   background: #fff;
   border-radius: 14px;
@@ -127,6 +133,18 @@ body {
 .empty {
   padding: 12px;
   color: #7a6a55;
+}
+
+.empty-card {
+  border: 1px dashed #e3d3bc;
+  background: #fffaf2;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.empty-card h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
 }
 
 .muted {
@@ -165,6 +183,13 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.toolbar-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .select-input {
@@ -298,6 +323,10 @@ body {
   padding: 10px 14px;
   border-radius: 999px;
   font-weight: 600;
+}
+
+.primary-button:disabled {
+  opacity: 0.6;
 }
 
 .ghost-button {

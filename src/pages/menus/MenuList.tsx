@@ -42,7 +42,12 @@ export function MenuListPage() {
       </form>
 
       <div className="card-grid">
-        {menus.length === 0 && <div className="empty">暂无菜单</div>}
+        {menus.length === 0 && (
+          <div className="empty-card">
+            <h3>暂无菜单</h3>
+            <p className="muted">可先创建一个“周末家宴”用于复用。</p>
+          </div>
+        )}
         {menus.map((menu) => (
           <div className="card" key={menu.id}>
             <h3>{menu.name}</h3>

@@ -45,51 +45,63 @@ export function DishListPage() {
       </div>
 
       <div className="toolbar">
-        <input
-          className="search-input"
-          placeholder="搜索菜名/描述/用料"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          onBlur={() => {
-            if (!query.trim()) return
-            setRecentSearches(addRecentSearch(query))
-          }}
-        />
-        <select
-          className="select-input"
-          value={selectedCategory}
-          onChange={(event) => setSelectedCategory(event.target.value)}
-        >
-          <option value="all">全部分类</option>
-          {sortedCategories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-          <option value="uncategorized">未分类</option>
-        </select>
-        <div className="segmented">
-          <button
-            className={`segmented-button${sortMode === 'name' ? ' segmented-active' : ''}`}
-            type="button"
-            onClick={() => setSortMode('name')}
+        <div className="toolbar-row">
+          <input
+            className="search-input"
+            placeholder="搜索菜名/描述/用料"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            onBlur={() => {
+              if (!query.trim()) return
+              setRecentSearches(addRecentSearch(query))
+            }}
+          />
+          <select
+            className="select-input"
+            value={selectedCategory}
+            onChange={(event) => setSelectedCategory(event.target.value)}
           >
-            名称排序
-          </button>
-          <button
-            className={`segmented-button${sortMode === 'updatedAt' ? ' segmented-active' : ''}`}
-            type="button"
-            onClick={() => setSortMode('updatedAt')}
-          >
-            更新排序
+            <option value="all">全部分类</option>
+            {sortedCategories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+            <option value="uncategorized">未分类</option>
+          </select>
+        </div>
+        <div className="toolbar-row">
+          <div className="segmented">
+            <button
+              className={`segmented-button${sortMode === 'name' ? ' segmented-active' : ''}`}
+              type="button"
+              onClick={() => setSortMode('name')}
+            >
+              名称排序
+            </button>
+            <button
+              className={`segmented-button${sortMode === 'updatedAt' ? ' segmented-active' : ''}`}
+              type="button"
+              onClick={() => setSortMode('updatedAt')}
+            >
+              更新排序
+            </button>
+          </div>
+          <button className="primary-button" type="button" onClick={() => navigate('/dishes/new')}>
+            新增菜品
           </button>
         </div>
-        <button className="primary-button" type="button" onClick={() => navigate('/dishes/new')}>
-          新增菜品
-        </button>
       </div>
 
-      {filteredDishes.length === 0 && <div className="empty">暂无匹配菜品</div>}
+      {filteredDishes.length === 0 && (
+        <div className="empty-card">
+          <h3>暂无匹配菜品</h3>
+          <p className="muted">试试更短的关键词，或直接新增一条菜谱。</p>
+          <button className="primary-button" type="button" onClick={() => navigate('/dishes/new')}>
+            新增菜品
+          </button>
+        </div>
+      )}
 
       {recentSearches.length > 0 && (
         <div className="card">
