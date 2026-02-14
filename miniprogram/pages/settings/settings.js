@@ -165,7 +165,6 @@ Page({
   },
 
   async createInviteCode() {
-    this.startLoading('生成中...')
     try {
       if (!wx.cloud) {
         throw new Error('云开发未初始化')
@@ -183,6 +182,7 @@ Page({
         })
         if (!confirm) return
       }
+      this.startLoading('生成中...')
       const res = await createInvite({ forceNew: hasCouple })
       if (!res || !res.code) {
         throw new Error('生成邀请码失败')
