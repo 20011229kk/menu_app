@@ -65,8 +65,8 @@ Page({
     this.setData({ shareExpanded: !this.data.shareExpanded })
   },
 
-  exportData() {
-    const content = exportJson()
+  async exportData() {
+    const content = await exportJson()
     const fs = wx.getFileSystemManager()
     const path = `${wx.env.USER_DATA_PATH}/menu_app_export.json`
     fs.writeFile({
