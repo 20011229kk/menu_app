@@ -26,6 +26,8 @@ Page({
     tips: '',
     ingredients: [],
     steps: [],
+    ingredientsText: '',
+    stepsText: '',
     error: ''
   },
 
@@ -47,7 +49,7 @@ Page({
 
   async refreshData() {
     const categories = listCategories().sort((a, b) => a.order - b.order)
-    const categoryOptions = [{ id: '', name: '未分类' }, ...categories]
+    const categoryOptions = [{ id: '', name: '请选择分类' }, ...categories]
     this.setData({ categoryOptions })
 
     if (this._dishId) {
@@ -78,18 +80,22 @@ Page({
           difficultyIndex: difficultyIndex >= 0 ? difficultyIndex : 0,
           tips: dish.tips || '',
           ingredients: dish.ingredients || [],
-          steps: dish.steps || []
+          steps: dish.steps || [],
+          ingredientsText: this.serializeIngredients(dish.ingredients || []),
+          stepsText: this.serializeSteps(dish.steps || [])
         })
       }
     }
   },
 
   onNameInput(event) {
-    this.setData({ name: event.detail.value })
+    const value = event.detail && event.detail.value !== undefined ? event.detail.value : event.detail
+    this.setData({ name: value })
   },
 
   onDescriptionInput(event) {
-    this.setData({ description: event.detail.value })
+    const value = event.detail && event.detail.value !== undefined ? event.detail.value : event.detail
+    this.setData({ description: value })
   },
 
   async chooseCoverImage() {
@@ -119,11 +125,13 @@ Page({
   },
 
   onCookTimeInput(event) {
-    this.setData({ cookTime: event.detail.value })
+    const value = event.detail && event.detail.value !== undefined ? event.detail.value : event.detail
+    this.setData({ cookTime: value })
   },
 
   onServingsInput(event) {
-    this.setData({ servings: event.detail.value })
+    const value = event.detail && event.detail.value !== undefined ? event.detail.value : event.detail
+    this.setData({ servings: value })
   },
 
   onDifficultyChange(event) {
@@ -133,61 +141,60 @@ Page({
   },
 
   onTipsInput(event) {
-    this.setData({ tips: event.detail.value })
+    const value = event.detail && event.detail.value !== undefined ? event.detail.value : event.detail
+    this.setData({ tips: value })
   },
 
-  addIngredient() {
-    const ingredients = this.data.ingredients.concat({ id: generateId(), name: '', amount: '', unit: '', note: '' })
-    this.setData({ ingredients })
+  onIngredientsInput(event) {
+    const value = event.detail && event.detail.value !== undefined ? event.detail.value : event.detail
+    this.setData({ ingredientsText: value })
   },
 
-  updateIngredient(event) {
-    const { index, field } = event.currentTarget.dataset
-    const value = event.detail.value
-    const ingredients = this.data.ingredients.slice()
-    ingredients[index][field] = value
-    this.setData({ ingredients })
+  onStepsInput(event) {
+    const value = event.detail && event.detail.value !== undefined ? event.detail.value : event.detail
+    this.setData({ stepsText: value })
   },
 
-  removeIngredient(event) {
-    const index = Number(event.currentTarget.dataset.index)
-    const ingredients = this.data.ingredients.slice()
-    ingredients.splice(index, 1)
-    this.setData({ ingredients })
+  serializeIngredients(ingredients) {
+    return (ingredients || [])
+      .map((item) => {
+        const amountPart = item.amount ? `${item.amount}${item.unit || ''}` : ''
+        const notePart = item.note ? `(${item.note})` : ''
+        return [item.name, amountPart, notePart].filter(Boolean).join(' ').trim()
+      })
+      .filter(Boolean)
+      .join('\n')
   },
 
-  addStep() {
-    const steps = this.data.steps.concat({ id: generateId(), order: this.data.steps.length + 1, content: '' })
-    this.setData({ steps })
+  serializeSteps(steps) {
+    return (steps || [])
+      .map((item, index) => {
+        const order = item.order || index + 1
+        const content = item.content || ''
+        return content ? `${order}. ${content}` : ''
+      })
+      .filter(Boolean)
+      .join('\n')
   },
 
-  updateStep(event) {
-    const { index, field } = event.currentTarget.dataset
-    const value = event.detail.value
-    const steps = this.data.steps.slice()
-    steps[index][field] = value
-    this.setData({ steps })
+  parseIngredientsText(text) {
+    const lines = String(text || '')
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean)
+    return lines.map((line) => ({ id: generateId(), name: line, amount: '', unit: '', note: '' }))
   },
 
-  removeStep(event) {
-    const index = Number(event.currentTarget.dataset.index)
-    const steps = this.data.steps.slice()
-    steps.splice(index, 1)
-    this.setData({ steps })
-  },
-
-  moveStep(event) {
-    const { index, direction } = event.currentTarget.dataset
-    const steps = this.data.steps.slice()
-    const target = direction === 'up' ? index - 1 : index + 1
-    if (target < 0 || target >= steps.length) return
-    const temp = steps[index]
-    steps[index] = steps[target]
-    steps[target] = temp
-    steps.forEach((step, idx) => {
-      step.order = idx + 1
-    })
-    this.setData({ steps })
+  parseStepsText(text) {
+    const lines = String(text || '')
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean)
+    return lines.map((line, index) => ({
+      id: generateId(),
+      order: index + 1,
+      content: line.replace(/^\\s*\\d+[\\.、\\)]\\s*/, '')
+    }))
   },
 
   saveDish() {
@@ -195,16 +202,25 @@ Page({
     const requiredError = validateRequired(name, '菜名')
     if (requiredError) {
       this.setData({ error: requiredError })
+      showError(null, requiredError)
       return
     }
-    const ingredientError = validateIngredients(this.data.ingredients)
+    if (!this.data.categoryId) {
+      const message = '请选择分类'
+      this.setData({ error: message })
+      showError(null, message)
+      return
+    }
+    const ingredientError = validateIngredients(this.data.ingredientsText)
     if (ingredientError) {
       this.setData({ error: ingredientError })
+      showError(null, ingredientError)
       return
     }
-    const stepError = validateSteps(this.data.steps)
+    const stepError = validateSteps(this.data.stepsText)
     if (stepError) {
       this.setData({ error: stepError })
+      showError(null, stepError)
       return
     }
     this.setData({ error: '' })
@@ -212,14 +228,16 @@ Page({
     const coverImage = this._coverChanged || !this.data.id ? this.data.coverImage : this._originalCoverImage
     const coverImageFileId =
       this._coverChanged || !this.data.id ? this.data.coverImageFileId : this._originalCoverImageFileId
+    const ingredients = this.parseIngredientsText(this.data.ingredientsText)
+    const steps = this.parseStepsText(this.data.stepsText)
     const payload = {
       name,
       description: this.data.description,
       coverImage,
       coverImageFileId,
       categoryId: this.data.categoryId || null,
-      ingredients: this.data.ingredients,
-      steps: this.data.steps,
+      ingredients,
+      steps,
       cookTime: this.data.cookTime ? Number(this.data.cookTime) : undefined,
       servings: this.data.servings ? Number(this.data.servings) : undefined,
       difficulty: this.data.difficulty || undefined,

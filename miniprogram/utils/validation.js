@@ -15,6 +15,9 @@ function validateUnique(name, list, label, currentId) {
 }
 
 function validateIngredients(ingredients) {
+  if (typeof ingredients === 'string') {
+    return null
+  }
   if ((ingredients || []).some((item) => !String(item.name || '').trim())) {
     return '用料名称不能为空'
   }
@@ -22,6 +25,9 @@ function validateIngredients(ingredients) {
 }
 
 function validateSteps(steps) {
+  if (typeof steps === 'string') {
+    return null
+  }
   if ((steps || []).some((item) => !String(item.content || '').trim())) {
     return '步骤内容不能为空'
   }
