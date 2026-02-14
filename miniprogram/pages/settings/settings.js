@@ -81,6 +81,18 @@ Page({
           cancelText: '稍后',
           success: (res) => {
             if (!res.confirm) return
+            if (typeof wx.saveFileToDisk === 'function') {
+              wx.saveFileToDisk({
+                filePath: path,
+                success: () => {
+                  wx.showToast({ title: '已保存', icon: 'success' })
+                },
+                fail: (error) => {
+                  showError(error, '保存失败')
+                }
+              })
+              return
+            }
             if (typeof wx.shareFileMessage === 'function') {
               wx.shareFileMessage({
                 filePath: path,
