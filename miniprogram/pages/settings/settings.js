@@ -81,6 +81,31 @@ Page({
           cancelText: '稍后',
           success: (res) => {
             if (!res.confirm) return
+            const fallbackOpen = () => {
+              if (typeof wx.shareFileMessage === 'function') {
+                wx.shareFileMessage({
+                  filePath: path,
+                  fileName: 'menu_app_export.json',
+                  success: () => {
+                    wx.showToast({ title: '已唤起分享', icon: 'success' })
+                  },
+                  fail: (error) => {
+                    console.error('shareFileMessage failed', error)
+                    showError(error, '分享失败')
+                  }
+                })
+                return
+              }
+              wx.openDocument({
+                filePath: path,
+                showMenu: true,
+                fail: (error) => {
+                  console.error('openDocument failed', error)
+                  showError(error, '无法打开文件')
+                }
+              })
+            }
+
             if (typeof wx.saveFileToDisk === 'function') {
               wx.saveFileToDisk({
                 filePath: path,
@@ -88,31 +113,14 @@ Page({
                   wx.showToast({ title: '已保存', icon: 'success' })
                 },
                 fail: (error) => {
-                  showError(error, '保存失败')
+                  console.error('saveFileToDisk failed', error)
+                  fallbackOpen()
                 }
               })
               return
             }
-            if (typeof wx.shareFileMessage === 'function') {
-              wx.shareFileMessage({
-                filePath: path,
-                fileName: 'menu_app_export.json',
-                success: () => {
-                  wx.showToast({ title: '已唤起分享', icon: 'success' })
-                },
-                fail: (error) => {
-                  showError(error, '分享失败')
-                }
-              })
-              return
-            }
-            wx.openDocument({
-              filePath: path,
-              showMenu: true,
-              fail: (error) => {
-                showError(error, '无法打开文件')
-              }
-            })
+
+            fallbackOpen()
           }
         })
       },
