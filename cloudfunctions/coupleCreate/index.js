@@ -11,11 +11,12 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   const openid = wxContext.OPENID
 
+  const forceNew = !!event.forceNew
   const existing = await db.collection('couples').where({
     ownerOpenId: openid
   }).get()
 
-  if (existing.data.length > 0) {
+  if (!forceNew && existing.data.length > 0) {
     return { coupleId: existing.data[0]._id, code: existing.data[0].code }
   }
 

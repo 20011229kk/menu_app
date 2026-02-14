@@ -50,10 +50,14 @@ async function callFunction(name, data) {
   return res.result
 }
 
-async function createInvite() {
-  const result = await callFunction('coupleCreate', {})
+async function createInvite(options = {}) {
+  const result = await callFunction('coupleCreate', { forceNew: !!options.forceNew })
   if (result.coupleId) {
+    const previous = getCoupleId()
     setCoupleId(result.coupleId)
+    if (previous !== result.coupleId) {
+      setLastSync('')
+    }
   }
   return result
 }
@@ -61,7 +65,11 @@ async function createInvite() {
 async function joinInvite(code) {
   const result = await callFunction('coupleJoin', { code })
   if (result.ok && result.coupleId) {
+    const previous = getCoupleId()
     setCoupleId(result.coupleId)
+    if (previous !== result.coupleId) {
+      setLastSync('')
+    }
   }
   return result
 }

@@ -170,7 +170,20 @@ Page({
       if (!wx.cloud) {
         throw new Error('云开发未初始化')
       }
-      const res = await createInvite()
+      const hasCouple = !!this.data.coupleId
+      if (hasCouple) {
+        const confirm = await new Promise((resolve) => {
+          wx.showModal({
+            title: '生成新邀请码',
+            content: '将创建新的共享空间，旧数据不再同步，确定继续吗？',
+            confirmText: '继续',
+            cancelText: '取消',
+            success: (res) => resolve(res.confirm)
+          })
+        })
+        if (!confirm) return
+      }
+      const res = await createInvite({ forceNew: hasCouple })
       if (!res || !res.code) {
         throw new Error('生成邀请码失败')
       }
