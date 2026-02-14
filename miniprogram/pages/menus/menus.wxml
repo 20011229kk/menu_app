@@ -4,19 +4,23 @@
     <view class="muted">把一餐一饭编排成小小仪式</view>
   </view>
 
-  <view class="card">
+  <view class="card menu-add-card">
     <view class="section-title">新增菜单</view>
-    <input class="input" placeholder="例如：周末家宴" value="{{name}}" bindinput="onNameInput" />
+    <van-field
+      placeholder="例如：周末家宴"
+      value="{{name}}"
+      bind:change="onNameInput"
+      custom-class="van-field-soft"
+    />
 
-    <view class="row" style="margin-top: 12rpx;">
-      <view class="section-title">菜单封面</view>
-      <view class="button-ghost" bindtap="chooseCoverImage">选择图片</view>
+    <view class="section-title" style="margin-top: 16rpx;">菜单封面</view>
+    <view class="image-uploader" bindtap="chooseCoverImage">
+      <image wx:if="{{coverImage}}" class="image-uploader-img" mode="widthFix" src="{{coverImage}}" />
+      <view wx:if="{{!coverImage}}" class="image-uploader-placeholder">点击上传图片</view>
     </view>
-    <image wx:if="{{coverImage}}" class="cover" mode="aspectFill" src="{{coverImage}}" />
-    <view wx:if="{{coverImage}}" class="button-ghost" bindtap="removeCoverImage">移除图片</view>
-    <view wx:if="{{!coverImage}}" class="muted">未设置封面</view>
-
-    <view class="button-primary" bindtap="addMenu">新增菜单</view>
+    <view class="actions-wrap actions-center" style="margin-top: 16rpx;">
+      <van-button type="primary" custom-class="btn-inline" bind:tap="addMenu">新增菜单</van-button>
+    </view>
     <view wx:if="{{error}}" class="error">{{error}}</view>
   </view>
 
@@ -25,19 +29,26 @@
     <view class="muted">可先创建一个“周末家宴”用于复用。</view>
   </view>
 
-  <view class="card" wx:for="{{menus}}" wx:key="id">
-    <image wx:if="{{imageMap[item.id]}}" class="cover" mode="aspectFill" src="{{imageMap[item.id]}}" />
-    <view class="section-title">{{item.name}}</view>
-    <view class="muted">{{item.items.length}} 道菜</view>
+  <view class="card" wx:for="{{menus}}" wx:key="id" data-id="{{item.id}}" bindtap="goToDetail">
     <view class="row">
-      <view class="button-ghost" data-id="{{item.id}}" bindtap="goToDetail">查看详情</view>
-      <view class="button-ghost" data-id="{{item.id}}" bindtap="goToEdit">编辑</view>
-      <view class="button-ghost" data-id="{{item.id}}" bindtap="removeMenu">删除</view>
+      <image wx:if="{{imageMap[item.id]}}" class="thumb" mode="aspectFill" src="{{imageMap[item.id]}}" />
+      <view class="stack" style="flex: 1;">
+        <view class="section-title">{{item.name}}</view>
+        <view class="muted">{{item.items.length}} 道菜</view>
+      </view>
+      <view class="actions-stack" catchtap>
+        <van-button size="small" type="default" custom-class="action-icon action-move" data-id="{{item.id}}" bind:tap="goToEdit">
+          <van-icon name="edit" />
+        </van-button>
+        <van-button size="small" type="danger" custom-class="action-icon action-delete" data-id="{{item.id}}" bind:tap="removeMenu">
+          <van-icon name="delete" />
+        </van-button>
+      </view>
     </view>
   </view>
 
   <view wx:if="{{lastDeleted}}" class="card undo-bar">
     <view>已删除菜单：{{lastDeleted.name}}</view>
-    <view class="button-ghost" bindtap="undoDelete">撤销</view>
+    <van-button size="small" type="default" bind:tap="undoDelete">撤销</van-button>
   </view>
 </view>

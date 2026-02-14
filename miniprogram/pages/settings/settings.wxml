@@ -2,67 +2,58 @@
   <view class="card">
     <view class="section-title">这是我们的菜单</view>
     <view class="muted">这是我们的菜单</view>
-    <view wx:if="{{!galleryImage}}" class="row" style="margin-top: 12rpx;">
-      <view class="button-ghost" bindtap="chooseGalleryImage">上传图片</view>
+    <view class="image-uploader" bindtap="chooseGalleryImage" style="margin-top: 12rpx;">
+      <image wx:if="{{galleryImage}}" class="image-uploader-img" mode="widthFix" src="{{galleryImage}}" />
+      <view wx:if="{{!galleryImage}}" class="image-uploader-placeholder">点击上传图片</view>
     </view>
-    <image
-      wx:if="{{galleryImage}}"
-      class="gallery"
-      mode="aspectFill"
-      src="{{galleryImage}}"
-      bindtap="chooseGalleryImage"
-    />
-    <view wx:if="{{!galleryImage}}" class="empty-card" style="margin-top: 12rpx;">
-      <view class="muted">尚未上传图片</view>
-    </view>
-  </view>
+</view>
 
-  <view class="card">
-    <view class="row" bindtap="toggleSharePanel">
-      <view>
-        <view class="section-title">共享设置</view>
-        <view class="muted">情侣两人共享菜单数据</view>
-      </view>
-      <view class="collapse">{{shareExpanded ? '收起' : '展开'}}</view>
-    </view>
-
-    <view wx:if="{{shareExpanded}}" class="collapse-body">
-      <view class="row" style="margin-top: 12rpx;">
-        <view class="muted">启用云同步</view>
-        <switch checked="{{syncEnabled}}" bindchange="toggleSync" />
-      </view>
-      <view class="muted" wx:if="{{syncStatus}}">{{syncStatus}}</view>
-      <view class="row" style="margin-top: 12rpx;">
-        <view class="button-ghost" bindtap="createInviteCode">生成邀请码</view>
-        <view class="button-ghost" bindtap="syncNow">立即同步</view>
+<view wx:if="{{softToastVisible}}" class="soft-toast">{{softToastText}}</view>
+  <van-collapse value="{{activePanels}}" bind:change="onCollapseChange">
+    <van-collapse-item title="共享设置 💞" name="share">
+      <van-cell title="启用云同步" custom-class="van-cell-soft">
+        <van-switch
+          slot="right-icon"
+          size="22"
+          checked="{{syncEnabled}}"
+          active-color="#ff7aa2"
+          bind:change="toggleSync"
+        />
+      </van-cell>
+      <view wx:if="{{syncStatus}}" class="muted" style="margin: 8rpx 0 12rpx;">{{syncStatus}}</view>
+      <view class="vant-actions">
+        <van-button size="small" type="primary" bind:tap="createInviteCode">生成邀请码</van-button>
+        <van-button size="small" type="default" bind:tap="syncNow">立即同步</van-button>
       </view>
       <view wx:if="{{inviteCode}}" class="muted" style="margin-top: 12rpx;">邀请码：{{inviteCode}}</view>
-      <view class="row" style="margin-top: 12rpx;">
-        <input class="input" placeholder="输入邀请码" value="{{joinCode}}" bindinput="onJoinInput" />
-        <view class="button-ghost" bindtap="joinInviteCode">加入共享</view>
+      <view class="vant-actions" style="margin-top: 12rpx;">
+        <van-field
+          label="邀请码"
+          placeholder="输入邀请码"
+          value="{{joinCode}}"
+          bind:change="onJoinInput"
+          custom-class="van-field-soft"
+        />
+        <van-button size="small" type="default" bind:tap="joinInviteCode">加入共享</van-button>
       </view>
-    </view>
-  </view>
+    </van-collapse-item>
 
-  <view class="card">
-    <view class="row" bindtap="toggleAdvancedPanel">
-      <view>
-        <view class="section-title">高级选项</view>
-        <view class="muted">导出/导入与高级操作</view>
-      </view>
-      <view class="collapse">{{advancedExpanded ? '收起' : '展开'}}</view>
-    </view>
-    <view wx:if="{{advancedExpanded}}" class="collapse-body">
-      <view class="section-title">数据导出</view>
-      <view class="muted">导出为 JSON 文件用于备份（包含图片）</view>
-      <view class="button-ghost" bindtap="exportData">导出 JSON</view>
-
-      <view style="height: 16rpx;"></view>
-
-      <view class="section-title">数据导入</view>
-      <view class="muted">从 JSON 备份恢复数据（将覆盖当前数据）</view>
-      <view class="button-ghost" bindtap="importData">选择文件</view>
-      <view wx:if="{{importResult}}" class="muted">{{importResult}}</view>
-    </view>
-  </view>
+    <van-collapse-item title="高级选项 ⚙️" name="advanced">
+      <van-cell
+        title="数据导出 📦"
+        label="导出为 JSON 文件用于备份（包含图片）"
+        custom-class="van-cell-soft"
+      >
+        <van-button slot="right-icon" size="small" type="primary" bind:tap="exportData">导出</van-button>
+      </van-cell>
+      <van-cell
+        title="数据导入 🔁"
+        label="从 JSON 备份恢复数据（将覆盖当前数据）"
+        custom-class="van-cell-soft"
+      >
+        <van-button slot="right-icon" size="small" type="default" bind:tap="importData">选择文件</van-button>
+      </van-cell>
+      <view wx:if="{{importResult}}" class="muted" style="margin-top: 8rpx;">{{importResult}}</view>
+    </van-collapse-item>
+  </van-collapse>
 </view>

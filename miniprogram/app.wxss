@@ -56,6 +56,30 @@ page {
   margin-left: 12rpx;
 }
 
+.image-uploader {
+  margin-top: 12rpx;
+  border-radius: 20rpx;
+  border: 1rpx solid rgba(255, 173, 199, 0.7);
+  background: #ffeef4;
+  padding: 12rpx;
+  min-height: 200rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-uploader-img {
+  width: 100%;
+  height: auto;
+  border-radius: 16rpx;
+  display: block;
+}
+
+.image-uploader-placeholder {
+  color: #b04b67;
+  font-size: 28rpx;
+}
+
 .input {
   border: 1rpx solid rgba(255, 173, 199, 0.7);
   border-radius: 16rpx;
@@ -137,6 +161,10 @@ page {
   flex-wrap: wrap;
   gap: 12rpx;
   align-items: center;
+}
+
+.actions-center {
+  justify-content: center;
 }
 
 .actions-right {

@@ -9,13 +9,11 @@
     <input class="input" placeholder="菜名" value="{{name}}" bindinput="onNameInput" />
     <input class="input" placeholder="一句话简介" value="{{description}}" bindinput="onDescriptionInput" />
 
-    <view class="row" style="margin-top: 12rpx;">
-      <view class="section-title">菜品图片</view>
-      <view class="button-ghost" bindtap="chooseCoverImage">选择图片</view>
+    <view class="section-title" style="margin-top: 12rpx;">菜品图片</view>
+    <view class="image-uploader" bindtap="chooseCoverImage">
+      <image wx:if="{{coverImage}}" class="image-uploader-img" mode="widthFix" src="{{coverImage}}" />
+      <view wx:if="{{!coverImage}}" class="image-uploader-placeholder">点击上传图片</view>
     </view>
-    <image wx:if="{{coverImage}}" class="cover" mode="aspectFill" src="{{coverImage}}" />
-    <view wx:if="{{coverImage}}" class="button-ghost" bindtap="removeCoverImage">移除图片</view>
-    <view wx:if="{{!coverImage}}" class="muted">未设置图片</view>
 
     <picker mode="selector" range="{{categoryOptions}}" range-key="name" value="{{categoryIndex}}" bindchange="onCategoryChange">
       <view class="input">{{categoryOptions[categoryIndex].name}}</view>

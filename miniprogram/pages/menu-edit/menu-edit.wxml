@@ -6,42 +6,49 @@
 
   <view class="card">
     <view class="section-title">菜单名称</view>
-    <input class="input" value="{{name}}" bindinput="onNameInput" />
+    <van-field value="{{name}}" bind:change="onNameInput" custom-class="van-field-soft" />
   </view>
 
   <view class="card">
-    <view class="row">
-      <view class="section-title">菜单封面</view>
-      <view class="button-ghost" bindtap="chooseCoverImage">选择图片</view>
+    <view class="section-title">菜单封面</view>
+    <view class="image-uploader" bindtap="chooseCoverImage">
+      <image wx:if="{{coverImage}}" class="image-uploader-img" mode="widthFix" src="{{coverImage}}" />
+      <view wx:if="{{!coverImage}}" class="image-uploader-placeholder">点击上传图片</view>
     </view>
-    <image wx:if="{{coverImage}}" class="cover" mode="aspectFill" src="{{coverImage}}" />
-    <view wx:if="{{coverImage}}" class="button-ghost" bindtap="removeCoverImage">移除图片</view>
-    <view wx:if="{{!coverImage}}" class="muted">未设置封面</view>
   </view>
 
   <view class="card">
-    <view class="row">
+    <view class="actions-wrap">
       <view class="section-title">添加菜品</view>
     </view>
     <picker mode="selector" range="{{dishes}}" range-key="name" bindchange="onDishSelect">
       <view class="input">{{dishes[selectedDishIndex] ? dishes[selectedDishIndex].name : '选择菜品'}} </view>
     </picker>
-    <view class="button-ghost" bindtap="addDish">添加</view>
+    <van-button size="small" type="primary" bind:tap="addDish">添加</van-button>
   </view>
 
   <view class="card">
     <view wx:if="{{menuItems.length === 0}}" class="muted">暂无菜品</view>
     <view wx:for="{{menuItems}}" wx:key="id" class="stack">
-      <view class="section-title">{{item.dishName}}</view>
-      <input class="input" placeholder="备注" value="{{item.note}}" data-index="{{index}}" bindinput="updateNote" />
-      <view class="row">
-        <view class="button-ghost" data-index="{{index}}" data-direction="up" bindtap="moveItem">上移</view>
-        <view class="button-ghost" data-index="{{index}}" data-direction="down" bindtap="moveItem">下移</view>
-        <view class="button-ghost" data-index="{{index}}" bindtap="removeItem">删除</view>
+      <view class="menu-item-row">
+        <view class="section-title menu-item-title">{{item.dishName}}</view>
+        <view class="actions-wrap actions-right">
+          <van-button size="small" type="default" custom-class="action-icon action-move" data-index="{{index}}" data-direction="up" bind:tap="moveItem">
+            <van-icon name="arrow-up" />
+          </van-button>
+          <van-button size="small" type="default" custom-class="action-icon action-move" data-index="{{index}}" data-direction="down" bind:tap="moveItem">
+            <van-icon name="arrow-down" />
+          </van-button>
+          <van-button size="small" type="danger" custom-class="action-icon action-delete" data-index="{{index}}" bind:tap="removeItem">
+            <van-icon name="delete" />
+          </van-button>
+        </view>
       </view>
     </view>
   </view>
 
-  <view class="button-primary" bindtap="saveMenu">保存菜单</view>
+  <van-button type="primary" block bind:tap="saveMenu">保存菜单</van-button>
   <view wx:if="{{error}}" class="error">{{error}}</view>
 </view>
+
+<view wx:if="{{softToastVisible}}" class="soft-toast">{{softToastText}}</view>
