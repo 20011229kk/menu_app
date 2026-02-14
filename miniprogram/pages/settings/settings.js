@@ -220,11 +220,19 @@ Page({
     }
     this.startLoading('加入中...')
     try {
+      const previousCoupleId = this.data.coupleId
       const res = await joinInvite(code)
       if (!res.ok) {
         throw new Error(res.message || '加入失败')
       }
       this.setData({ coupleId: res.coupleId || '' })
+      if (res.coupleId && res.coupleId !== previousCoupleId) {
+        clearLists()
+        this.setData({ syncStatus: '' })
+        emit('data:changed')
+        wx.showToast({ title: '已切换共享空间并清空本地', icon: 'success' })
+        return
+      }
       wx.showToast({ title: '已加入共享', icon: 'success' })
     } catch (error) {
       showError(error, '加入失败')
