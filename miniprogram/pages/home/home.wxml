@@ -18,32 +18,29 @@
   </view>
 
   <view wx:if="{{view === 'category'}}" class="stack">
+    <view wx:if="{{categories.length === 0}}" class="card empty-card">
+      <van-empty description="还没有分类，先去分类页创建。" />
+    </view>
     <view class="card" wx:for="{{categories}}" wx:key="id">
       <view class="row">
         <view class="section-title">{{item.name}}</view>
         <view class="badge">{{categoryCounts[item.id] || 0}}</view>
       </view>
       <view class="muted">{{categoryCounts[item.id] || 0}} 道菜</view>
-      <view class="button-ghost" bindtap="goToDishes">查看菜品</view>
-    </view>
-    <view class="card">
-      <view class="row">
-        <view class="section-title">未分类</view>
-        <view class="badge">{{categoryCounts.uncategorized || 0}}</view>
-      </view>
-      <view class="muted">{{categoryCounts.uncategorized || 0}} 道菜</view>
-      <view class="button-ghost" bindtap="goToDishes">查看菜品</view>
+      <van-button size="small" type="default" bind:tap="goToDishes">查看菜品</van-button>
     </view>
   </view>
 
   <view wx:if="{{view === 'recent'}}" class="stack">
     <view wx:if="{{recentDishes.length === 0}}" class="card">
-      <view class="muted">暂无更新记录</view>
+      <van-empty description="暂无更新记录" />
     </view>
     <view class="card" wx:for="{{recentDishes}}" wx:key="id">
       <view class="section-title">{{item.name}}</view>
       <view class="muted">{{item.description || '暂无简介'}}</view>
-      <view class="button-ghost" data-id="{{item.id}}" bindtap="goToDishDetail">查看详情</view>
+      <van-button size="small" type="default" data-id="{{item.id}}" bind:tap="goToDishDetail">查看详情</van-button>
     </view>
   </view>
 </view>
+
+<view wx:if="{{softToastVisible}}" class="soft-toast">{{softToastText}}</view>

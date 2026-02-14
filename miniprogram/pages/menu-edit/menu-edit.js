@@ -68,7 +68,8 @@ Page({
   },
 
   onNameInput(event) {
-    this.setData({ name: event.detail.value })
+    const value = event.detail && event.detail.value !== undefined ? event.detail.value : event.detail
+    this.setData({ name: value })
   },
 
   async chooseCoverImage() {
@@ -114,7 +115,7 @@ Page({
 
   updateNote(event) {
     const { index } = event.currentTarget.dataset
-    const value = event.detail.value
+    const value = event.detail && event.detail.value !== undefined ? event.detail.value : event.detail
     const next = this.data.menuItems.slice()
     next[index].note = value
     this.setData({ menuItems: next })
@@ -149,11 +150,13 @@ Page({
     const requiredError = validateRequired(name, '菜单名')
     if (requiredError) {
       this.setData({ error: requiredError })
+      showError(null, requiredError)
       return
     }
     const uniqueError = validateUnique(name, listMenus(), '菜单名', this.data.id)
     if (uniqueError) {
       this.setData({ error: uniqueError })
+      showError(null, uniqueError)
       return
     }
     this.setData({ error: '' })
@@ -161,7 +164,6 @@ Page({
       id: item.id,
       dishId: item.dishId,
       servings: item.servings,
-      note: item.note,
       order: item.order
     }))
     const coverImage = this._coverChanged || !this.data.id ? this.data.coverImage : this._originalCoverImage

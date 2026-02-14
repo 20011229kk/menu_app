@@ -34,11 +34,7 @@ Page({
   refresh() {
     const categories = listCategories().sort((a, b) => a.order - b.order)
     const dishes = listDishes()
-    const categoryOptions = [
-      { id: 'all', name: '全部分类' },
-      ...categories,
-      { id: 'uncategorized', name: '未分类' }
-    ]
+    const categoryOptions = [{ id: 'all', name: '全部分类' }, ...categories]
     this.setData({ categories, dishes, categoryOptions })
     this.applyFilters()
     this.resolveDishImages(dishes)
@@ -62,7 +58,8 @@ Page({
   },
 
   onQueryInput(event) {
-    this.setData({ query: event.detail.value })
+    const value = event.detail && event.detail.value !== undefined ? event.detail.value : event.detail
+    this.setData({ query: value })
     this.applyFilters()
   },
 
@@ -70,6 +67,13 @@ Page({
     const index = Number(event.detail.value)
     const selected = this.data.categoryOptions[index]
     this.setData({ selectedCategory: selected.id, selectedCategoryLabel: selected.name })
+    this.applyFilters()
+  },
+
+  onCategorySelect(event) {
+    const id = event.currentTarget.dataset.id
+    const label = event.currentTarget.dataset.name
+    this.setData({ selectedCategory: id, selectedCategoryLabel: label })
     this.applyFilters()
   },
 

@@ -1,18 +1,23 @@
+<van-config-provider theme-vars="{{vanThemeVars}}">
 <view class="container">
   <view class="card">
-    <view class="section-title">分类</view>
-    <view class="muted">管理菜品分类并调整排序</view>
+    <view class="section-title">甜蜜分区 💗</view>
+    <view class="muted">把常用分类整理得更有条理</view>
   </view>
 
-  <view class="card">
+  <view class="card category-add">
     <view class="section-title">新增分类</view>
+    <view class="muted">为日常做饭建立清晰分区</view>
     <van-field
       placeholder="例如：热菜"
       value="{{name}}"
       bind:change="onNameInput"
       custom-class="van-field-soft"
     />
-    <van-button type="primary" block bind:tap="addCategory">添加分类</van-button>
+    <view class="actions-wrap add-actions">
+      <view class="muted">建议按口味或场景命名</view>
+      <van-button type="primary" custom-class="add-button" bind:tap="addCategory">添加分类</van-button>
+    </view>
     <view wx:if="{{error}}" class="error">{{error}}</view>
   </view>
 
@@ -80,3 +85,6 @@
     <van-button size="small" type="default" bind:tap="undoDelete">撤销</van-button>
   </view>
 </view>
+
+<view wx:if="{{softToastVisible}}" class="soft-toast">{{softToastText}}</view>
+</van-config-provider>

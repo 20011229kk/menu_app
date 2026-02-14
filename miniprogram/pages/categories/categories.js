@@ -8,6 +8,7 @@ const {
 const { validateRequired, validateUnique } = require('../../utils/validation')
 const { on, off } = require('../../utils/events')
 const { confirmDelete } = require('../../utils/confirm')
+const { showError } = require('../../utils/errors')
 
 Page({
   data: {
@@ -16,7 +17,15 @@ Page({
     editingId: '',
     editingName: '',
     lastDeleted: null,
-    error: ''
+    error: '',
+    vanThemeVars: {
+      buttonPrimaryBackgroundColor: '#ffd6e6',
+      buttonPrimaryBorderColor: '#ffd6e6',
+      buttonPrimaryColor: '#b04b67',
+      buttonDefaultBackgroundColor: '#fff3f7',
+      buttonDefaultBorderColor: 'rgba(255, 173, 199, 0.7)',
+      buttonDefaultColor: '#b04b67'
+    }
   },
 
   onLoad() {
@@ -40,7 +49,8 @@ Page({
   },
 
   onNameInput(event) {
-    this.setData({ name: event.detail.value })
+    const value = event.detail && event.detail.value !== undefined ? event.detail.value : event.detail
+    this.setData({ name: value })
   },
 
   addCategory() {
@@ -48,11 +58,13 @@ Page({
     const requiredError = validateRequired(name, '分类名')
     if (requiredError) {
       this.setData({ error: requiredError })
+      showError(null, requiredError)
       return
     }
     const uniqueError = validateUnique(name, this.data.categories, '分类名')
     if (uniqueError) {
       this.setData({ error: uniqueError })
+      showError(null, uniqueError)
       return
     }
     const maxOrder = this.data.categories.reduce((max, item) => Math.max(max, item.order), 0)
@@ -67,7 +79,8 @@ Page({
   },
 
   onEditInput(event) {
-    this.setData({ editingName: event.detail.value })
+    const value = event.detail && event.detail.value !== undefined ? event.detail.value : event.detail
+    this.setData({ editingName: value })
   },
 
   saveEdit() {
@@ -77,11 +90,13 @@ Page({
     const requiredError = validateRequired(name, '分类名')
     if (requiredError) {
       this.setData({ error: requiredError })
+      showError(null, requiredError)
       return
     }
     const uniqueError = validateUnique(name, categories, '分类名', editingId)
     if (uniqueError) {
       this.setData({ error: uniqueError })
+      showError(null, uniqueError)
       return
     }
     updateCategory(editingId, { name })

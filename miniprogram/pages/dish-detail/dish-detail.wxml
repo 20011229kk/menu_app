@@ -1,12 +1,16 @@
 <view class="container">
   <view wx:if="{{dish}}" class="stack">
     <view class="card">
-      <image wx:if="{{coverUrl}}" class="cover" mode="aspectFill" src="{{coverUrl}}" />
-      <view class="section-title">{{dish.name}}</view>
-      <view class="muted">{{dish.description || '暂无简介'}}</view>
-      <view class="row">
-        <view class="button-ghost" bindtap="goToEdit">编辑</view>
-        <view class="button-ghost" bindtap="removeDish">删除</view>
+      <view class="cover-wrap">
+        <image wx:if="{{coverUrl}}" class="cover" mode="widthFix" src="{{coverUrl}}" />
+      </view>
+      <view class="dish-header">
+        <view class="section-title">{{dish.name}}</view>
+        <view class="muted dish-desc">{{dish.description || '暂无简介'}}</view>
+      </view>
+      <view class="actions-wrap actions-row">
+        <van-button size="small" type="default" custom-class="btn-inline-detail" bind:tap="goToEdit">编辑</van-button>
+        <van-button size="small" type="danger" custom-class="btn-inline-detail" bind:tap="removeDish">删除</van-button>
       </view>
     </view>
 
@@ -33,12 +37,13 @@
   </view>
 
   <view wx:if="{{!dish && !lastDeleted}}" class="card">
-    <view class="section-title">未找到菜品</view>
-    <view class="muted">该菜品可能已被删除。</view>
+    <van-empty description="该菜品可能已被删除。" />
   </view>
 
   <view wx:if="{{lastDeleted}}" class="card undo-bar">
     <view>已删除菜品：{{lastDeleted.name}}</view>
-    <view class="button-ghost" bindtap="undoDelete">撤销</view>
+    <van-button size="small" type="default" bind:tap="undoDelete">撤销</van-button>
   </view>
 </view>
+
+<view wx:if="{{softToastVisible}}" class="soft-toast">{{softToastText}}</view>

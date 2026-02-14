@@ -57,7 +57,8 @@ Page({
   },
 
   onNameInput(event) {
-    this.setData({ name: event.detail.value })
+    const value = event.detail && event.detail.value !== undefined ? event.detail.value : event.detail
+    this.setData({ name: value })
   },
 
   async chooseCoverImage() {
@@ -83,11 +84,13 @@ Page({
     const requiredError = validateRequired(name, '菜单名')
     if (requiredError) {
       this.setData({ error: requiredError })
+      showError(null, requiredError)
       return
     }
     const uniqueError = validateUnique(name, this.data.menus, '菜单名')
     if (uniqueError) {
       this.setData({ error: uniqueError })
+      showError(null, uniqueError)
       return
     }
     const menu = createMenu(name, this.data.coverImage, this.data.coverImageFileId)
