@@ -1,11 +1,13 @@
 const { listDishes, deleteDish, restoreDish } = require('../../services/dishService')
 const { on, off } = require('../../utils/events')
 const { confirmDelete } = require('../../utils/confirm')
+const { getTempUrl } = require('../../utils/cloudFile')
 
 Page({
   data: {
     dish: null,
-    lastDeleted: null
+    lastDeleted: null,
+    coverUrl: ''
   },
 
   onLoad(query) {
@@ -24,10 +26,15 @@ Page({
     }
   },
 
-  loadDish() {
+  async loadDish() {
     const dishes = listDishes()
     const dish = dishes.find((item) => item.id === this.dishId)
-    this.setData({ dish })
+    let coverUrl = dish ? dish.coverImage || '' : ''
+    if (dish && dish.coverImageFileId) {
+      const url = await getTempUrl(dish.coverImageFileId)
+      if (url) coverUrl = url
+    }
+    this.setData({ dish, coverUrl })
   },
 
   goToEdit() {

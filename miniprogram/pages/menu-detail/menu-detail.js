@@ -1,11 +1,13 @@
 const { listMenus } = require('../../services/menuService')
 const { listDishes } = require('../../services/dishService')
 const { on, off } = require('../../utils/events')
+const { getTempUrl } = require('../../utils/cloudFile')
 
 Page({
   data: {
     menu: null,
-    items: []
+    items: [],
+    coverUrl: ''
   },
 
   onLoad(query) {
@@ -24,7 +26,7 @@ Page({
     }
   },
 
-  loadData() {
+  async loadData() {
     const menu = listMenus().find((item) => item.id === this.menuId)
     const dishes = listDishes()
     const dishMap = {}
@@ -35,7 +37,12 @@ Page({
       ...item,
       dishName: dishMap[item.dishId] || '菜品已删除'
     }))
-    this.setData({ menu, items })
+    let coverUrl = menu ? menu.coverImage || '' : ''
+    if (menu && menu.coverImageFileId) {
+      const url = await getTempUrl(menu.coverImageFileId)
+      if (url) coverUrl = url
+    }
+    this.setData({ menu, items, coverUrl })
   },
 
   goToEdit() {

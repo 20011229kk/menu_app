@@ -4,6 +4,8 @@ const { generateId } = require('../../utils/id')
 const { validateRequired, validateIngredients, validateSteps } = require('../../utils/validation')
 const { on, off } = require('../../utils/events')
 const { chooseSingleImage, saveImage } = require('../../utils/files')
+const { uploadImage, getTempUrl } = require('../../utils/cloudFile')
+const { getSyncEnabled, getCoupleId } = require('../../utils/sync')
 const { showError } = require('../../utils/errors')
 
 Page({
@@ -12,6 +14,7 @@ Page({
     name: '',
     description: '',
     coverImage: '',
+    coverImageFileId: '',
     categoryId: '',
     categoryOptions: [],
     categoryIndex: 0,
@@ -28,6 +31,9 @@ Page({
 
   onLoad(query) {
     this._dishId = query.id || ''
+    this._coverChanged = false
+    this._originalCoverImage = ''
+    this._originalCoverImageFileId = ''
     this._dataChangedHandler = () => this.refreshData()
     on('data:changed', this._dataChangedHandler)
     this.refreshData()
@@ -39,7 +45,7 @@ Page({
     }
   },
 
-  refreshData() {
+  async refreshData() {
     const categories = listCategories().sort((a, b) => a.order - b.order)
     const categoryOptions = [{ id: '', name: '未分类' }, ...categories]
     this.setData({ categoryOptions })
@@ -49,11 +55,21 @@ Page({
       if (dish) {
         const index = categoryOptions.findIndex((item) => item.id === (dish.categoryId || ''))
         const difficultyIndex = this.data.difficultyOptions.indexOf(dish.difficulty || '')
+        let coverImage = dish.coverImage || ''
+        const coverImageFileId = dish.coverImageFileId || ''
+        if (coverImageFileId) {
+          const url = await getTempUrl(coverImageFileId)
+          if (url) coverImage = url
+        }
+        this._coverChanged = false
+        this._originalCoverImage = dish.coverImage || ''
+        this._originalCoverImageFileId = dish.coverImageFileId || ''
         this.setData({
           id: dish.id,
           name: dish.name,
           description: dish.description || '',
-          coverImage: dish.coverImage || '',
+          coverImage,
+          coverImageFileId,
           categoryId: dish.categoryId || '',
           categoryIndex: index >= 0 ? index : 0,
           cookTime: dish.cookTime || '',
@@ -79,15 +95,21 @@ Page({
   async chooseCoverImage() {
     try {
       const tempPath = await chooseSingleImage()
+      let fileId = ''
+      if (getSyncEnabled() && getCoupleId()) {
+        fileId = await uploadImage(tempPath, getCoupleId(), 'dish-covers')
+      }
       const savedPath = await saveImage(tempPath)
-      this.setData({ coverImage: savedPath })
+      this._coverChanged = true
+      this.setData({ coverImage: savedPath, coverImageFileId: fileId })
     } catch (error) {
       showError(error, '选择图片失败')
     }
   },
 
   removeCoverImage() {
-    this.setData({ coverImage: '' })
+    this._coverChanged = true
+    this.setData({ coverImage: '', coverImageFileId: '' })
   },
 
   onCategoryChange(event) {
@@ -187,10 +209,14 @@ Page({
     }
     this.setData({ error: '' })
 
+    const coverImage = this._coverChanged || !this.data.id ? this.data.coverImage : this._originalCoverImage
+    const coverImageFileId =
+      this._coverChanged || !this.data.id ? this.data.coverImageFileId : this._originalCoverImageFileId
     const payload = {
       name,
       description: this.data.description,
-      coverImage: this.data.coverImage,
+      coverImage,
+      coverImageFileId,
       categoryId: this.data.categoryId || null,
       ingredients: this.data.ingredients,
       steps: this.data.steps,

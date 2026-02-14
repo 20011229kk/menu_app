@@ -42,6 +42,7 @@ function normalizeDishes(dishes) {
     id: item.id || generateId(),
     name: String(item.name || '').trim(),
     coverImage: item.coverImage || '',
+    coverImageFileId: item.coverImageFileId || '',
     categoryId: item.categoryId || null,
     description: item.description || '',
     ingredients: normalizeIngredients(item.ingredients),
@@ -71,6 +72,7 @@ function normalizeMenus(menus) {
     id: item.id || generateId(),
     name: String(item.name || '').trim(),
     coverImage: item.coverImage || '',
+    coverImageFileId: item.coverImageFileId || '',
     items: normalizeMenuItems(item.items),
     updatedAt: item.updatedAt || nowIso(),
     createdAt: item.createdAt || nowIso()

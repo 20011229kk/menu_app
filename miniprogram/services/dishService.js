@@ -13,6 +13,7 @@ function createDish(input) {
     id: generateId(),
     name: input.name.trim(),
     coverImage: input.coverImage || '',
+    coverImageFileId: input.coverImageFileId || '',
     categoryId: input.categoryId ?? null,
     description: input.description ? input.description.trim() : '',
     ingredients: input.ingredients || [],

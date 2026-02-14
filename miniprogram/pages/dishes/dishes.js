@@ -1,6 +1,7 @@
 const { listDishes } = require('../../services/dishService')
 const { listCategories } = require('../../services/categoryService')
 const { on, off } = require('../../utils/events')
+const { getTempUrl } = require('../../utils/cloudFile')
 
 Page({
   data: {
@@ -11,7 +12,8 @@ Page({
     categories: [],
     categoryOptions: [],
     dishes: [],
-    filtered: []
+    filtered: [],
+    imageMap: {}
   },
 
   onLoad() {
@@ -39,6 +41,24 @@ Page({
     ]
     this.setData({ categories, dishes, categoryOptions })
     this.applyFilters()
+    this.resolveDishImages(dishes)
+  },
+
+  async resolveDishImages(dishes) {
+    const map = {}
+    for (const dish of dishes) {
+      if (dish.coverImageFileId) {
+        const url = await getTempUrl(dish.coverImageFileId)
+        if (url) {
+          map[dish.id] = url
+          continue
+        }
+      }
+      if (dish.coverImage) {
+        map[dish.id] = dish.coverImage
+      }
+    }
+    this.setData({ imageMap: map })
   },
 
   onQueryInput(event) {

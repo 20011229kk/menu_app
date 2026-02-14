@@ -1,5 +1,7 @@
 const { STORAGE_KEYS, readList, writeList } = require('./storage')
 const { repairData } = require('./repair')
+const { uploadImage } = require('./cloudFile')
+const { nowIso } = require('./time')
 
 const SYNC_KEYS = {
   enabled: 'menu_app_sync_enabled',
@@ -74,6 +76,7 @@ async function syncNow() {
     return { ok: false, message: '未绑定共享空间' }
   }
   syncing = true
+  await ensureImageUploads(coupleId)
   const payload = {
     categories: readList(STORAGE_KEYS.categories),
     dishes: readList(STORAGE_KEYS.dishes),
@@ -131,6 +134,39 @@ function scheduleSync() {
       // ignore
     }
   }, 1200)
+}
+
+async function ensureImageUploads(coupleId) {
+  if (!wx.cloud || !coupleId) return
+  const dishes = readList(STORAGE_KEYS.dishes)
+  const menus = readList(STORAGE_KEYS.menus)
+  let dishesChanged = false
+  let menusChanged = false
+
+  for (const dish of dishes) {
+    if (!dish.coverImage || dish.coverImageFileId) continue
+    const fileId = await uploadImage(dish.coverImage, coupleId, 'dish-covers')
+    if (!fileId) continue
+    dish.coverImageFileId = fileId
+    dish.updatedAt = nowIso()
+    dishesChanged = true
+  }
+
+  for (const menu of menus) {
+    if (!menu.coverImage || menu.coverImageFileId) continue
+    const fileId = await uploadImage(menu.coverImage, coupleId, 'menu-covers')
+    if (!fileId) continue
+    menu.coverImageFileId = fileId
+    menu.updatedAt = nowIso()
+    menusChanged = true
+  }
+
+  if (dishesChanged) {
+    writeList(STORAGE_KEYS.dishes, dishes)
+  }
+  if (menusChanged) {
+    writeList(STORAGE_KEYS.menus, menus)
+  }
 }
 
 module.exports = {

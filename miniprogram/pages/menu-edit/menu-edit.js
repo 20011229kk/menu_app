@@ -4,6 +4,8 @@ const { generateId } = require('../../utils/id')
 const { validateRequired, validateUnique } = require('../../utils/validation')
 const { on, off } = require('../../utils/events')
 const { chooseSingleImage, saveImage } = require('../../utils/files')
+const { uploadImage, getTempUrl } = require('../../utils/cloudFile')
+const { getSyncEnabled, getCoupleId } = require('../../utils/sync')
 const { showError } = require('../../utils/errors')
 
 Page({
@@ -11,6 +13,7 @@ Page({
     id: '',
     name: '',
     coverImage: '',
+    coverImageFileId: '',
     dishes: [],
     menuItems: [],
     selectedDishIndex: 0,
@@ -19,6 +22,9 @@ Page({
 
   onLoad(query) {
     this._menuId = query.id
+    this._coverChanged = false
+    this._originalCoverImage = ''
+    this._originalCoverImageFileId = ''
     this._dataChangedHandler = () => this.refreshData()
     on('data:changed', this._dataChangedHandler)
     this.refreshData()
@@ -30,7 +36,7 @@ Page({
     }
   },
 
-  refreshData() {
+  async refreshData() {
     const menus = listMenus()
     const menu = menus.find((item) => item.id === this._menuId)
     const dishes = listDishes()
@@ -42,10 +48,20 @@ Page({
       ...item,
       dishName: dishMap[item.dishId] || '菜品已删除'
     }))
+    let coverImage = menu ? menu.coverImage || '' : ''
+    const coverImageFileId = menu ? menu.coverImageFileId || '' : ''
+    if (coverImageFileId) {
+      const url = await getTempUrl(coverImageFileId)
+      if (url) coverImage = url
+    }
+    this._coverChanged = false
+    this._originalCoverImage = menu ? menu.coverImage || '' : ''
+    this._originalCoverImageFileId = menu ? menu.coverImageFileId || '' : ''
     this.setData({
       id: this._menuId,
       name: menu ? menu.name : '',
-      coverImage: menu ? menu.coverImage || '' : '',
+      coverImage,
+      coverImageFileId,
       dishes,
       menuItems
     })
@@ -58,15 +74,21 @@ Page({
   async chooseCoverImage() {
     try {
       const tempPath = await chooseSingleImage()
+      let fileId = ''
+      if (getSyncEnabled() && getCoupleId()) {
+        fileId = await uploadImage(tempPath, getCoupleId(), 'menu-covers')
+      }
       const savedPath = await saveImage(tempPath)
-      this.setData({ coverImage: savedPath })
+      this._coverChanged = true
+      this.setData({ coverImage: savedPath, coverImageFileId: fileId })
     } catch (error) {
       showError(error, '选择图片失败')
     }
   },
 
   removeCoverImage() {
-    this.setData({ coverImage: '' })
+    this._coverChanged = true
+    this.setData({ coverImage: '', coverImageFileId: '' })
   },
 
   onDishSelect(event) {
@@ -142,7 +164,10 @@ Page({
       note: item.note,
       order: item.order
     }))
-    updateMenu(this.data.id, { name, items: payloadItems, coverImage: this.data.coverImage })
+    const coverImage = this._coverChanged || !this.data.id ? this.data.coverImage : this._originalCoverImage
+    const coverImageFileId =
+      this._coverChanged || !this.data.id ? this.data.coverImageFileId : this._originalCoverImageFileId
+    updateMenu(this.data.id, { name, items: payloadItems, coverImage, coverImageFileId })
     wx.navigateBack()
   }
 })

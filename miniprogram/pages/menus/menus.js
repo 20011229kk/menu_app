@@ -3,6 +3,8 @@ const { validateRequired, validateUnique } = require('../../utils/validation')
 const { on, off } = require('../../utils/events')
 const { confirmDelete } = require('../../utils/confirm')
 const { chooseSingleImage, saveImage } = require('../../utils/files')
+const { uploadImage, getTempUrl } = require('../../utils/cloudFile')
+const { getSyncEnabled, getCoupleId } = require('../../utils/sync')
 const { showError } = require('../../utils/errors')
 
 Page({
@@ -11,7 +13,9 @@ Page({
     menus: [],
     lastDeleted: null,
     error: '',
-    coverImage: ''
+    coverImage: '',
+    coverImageFileId: '',
+    imageMap: {}
   },
 
   onLoad() {
@@ -32,6 +36,24 @@ Page({
   refresh() {
     const menus = listMenus()
     this.setData({ menus })
+    this.resolveMenuImages(menus)
+  },
+
+  async resolveMenuImages(menus) {
+    const map = {}
+    for (const menu of menus) {
+      if (menu.coverImageFileId) {
+        const url = await getTempUrl(menu.coverImageFileId)
+        if (url) {
+          map[menu.id] = url
+          continue
+        }
+      }
+      if (menu.coverImage) {
+        map[menu.id] = menu.coverImage
+      }
+    }
+    this.setData({ imageMap: map })
   },
 
   onNameInput(event) {
@@ -42,14 +64,18 @@ Page({
     try {
       const tempPath = await chooseSingleImage()
       const savedPath = await saveImage(tempPath)
-      this.setData({ coverImage: savedPath })
+      let fileId = ''
+      if (getSyncEnabled() && getCoupleId()) {
+        fileId = await uploadImage(tempPath, getCoupleId(), 'menu-covers')
+      }
+      this.setData({ coverImage: savedPath, coverImageFileId: fileId })
     } catch (error) {
       showError(error, '选择图片失败')
     }
   },
 
   removeCoverImage() {
-    this.setData({ coverImage: '' })
+    this.setData({ coverImage: '', coverImageFileId: '' })
   },
 
   addMenu() {
@@ -64,8 +90,8 @@ Page({
       this.setData({ error: uniqueError })
       return
     }
-    const menu = createMenu(name, this.data.coverImage)
-    this.setData({ name: '', error: '', coverImage: '' })
+    const menu = createMenu(name, this.data.coverImage, this.data.coverImageFileId)
+    this.setData({ name: '', error: '', coverImage: '', coverImageFileId: '' })
     wx.navigateTo({ url: `/pages/menu-edit/menu-edit?id=${menu.id}` })
   },
 

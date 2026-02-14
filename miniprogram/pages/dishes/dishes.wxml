@@ -24,7 +24,7 @@
 
   <view class="card" wx:for="{{filtered}}" wx:key="id">
     <view class="row">
-      <image wx:if="{{item.coverImage}}" class="thumb" mode="aspectFill" src="{{item.coverImage}}" />
+      <image wx:if="{{imageMap[item.id]}}" class="thumb" mode="aspectFill" src="{{imageMap[item.id]}}" />
       <view class="stack" style="flex: 1;">
         <view class="section-title">{{item.name}}</view>
         <view class="muted">{{item.description || '暂无简介'}}</view>
