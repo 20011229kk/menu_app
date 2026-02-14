@@ -23,7 +23,8 @@ Page({
     inviteCode: '',
     joinCode: '',
     syncStatus: '',
-    shareExpanded: false
+    shareExpanded: false,
+    advancedExpanded: false
   },
 
   onLoad() {
@@ -63,6 +64,10 @@ Page({
 
   toggleSharePanel() {
     this.setData({ shareExpanded: !this.data.shareExpanded })
+  },
+
+  toggleAdvancedPanel() {
+    this.setData({ advancedExpanded: !this.data.advancedExpanded })
   },
 
   async exportData() {

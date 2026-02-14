@@ -51,9 +51,18 @@
   </view>
 
   <view class="card">
-    <view class="section-title">数据导入</view>
-    <view class="muted">从 JSON 备份恢复数据（将覆盖当前数据）</view>
-    <view class="button-ghost" bindtap="importData">选择文件</view>
-    <view wx:if="{{importResult}}" class="muted">{{importResult}}</view>
+    <view class="row" bindtap="toggleAdvancedPanel">
+      <view>
+        <view class="section-title">高级选项</view>
+        <view class="muted">谨慎操作数据恢复</view>
+      </view>
+      <view class="collapse">{{advancedExpanded ? '收起' : '展开'}}</view>
+    </view>
+    <view wx:if="{{advancedExpanded}}" class="collapse-body">
+      <view class="section-title">数据导入</view>
+      <view class="muted">从 JSON 备份恢复数据（将覆盖当前数据）</view>
+      <view class="button-ghost" bindtap="importData">选择文件</view>
+      <view wx:if="{{importResult}}" class="muted">{{importResult}}</view>
+    </view>
   </view>
 </view>
