@@ -1,39 +1,82 @@
 <view class="container">
   <view class="card">
-    <view class="section-title">甜蜜分区 💗</view>
-    <view class="muted">把常用分类整理得更有条理</view>
+    <view class="section-title">分类</view>
+    <view class="muted">管理菜品分类并调整排序</view>
   </view>
 
   <view class="card">
     <view class="section-title">新增分类</view>
-    <input class="input" placeholder="例如：热菜" value="{{name}}" bindinput="onNameInput" />
-    <view class="button-primary" bindtap="addCategory">添加分类</view>
+    <van-field
+      placeholder="例如：热菜"
+      value="{{name}}"
+      bind:change="onNameInput"
+      custom-class="van-field-soft"
+    />
+    <van-button type="primary" block bind:tap="addCategory">添加分类</van-button>
     <view wx:if="{{error}}" class="error">{{error}}</view>
   </view>
 
   <view wx:if="{{categories.length === 0}}" class="card empty-card">
-    <view class="section-title">还没有分类</view>
-    <view class="muted">先创建常用分类（如热菜/凉菜/汤）。</view>
+    <van-empty description="还没有分类，先创建常用分类（如热菜/凉菜/汤）。" />
   </view>
 
   <view class="card" wx:for="{{categories}}" wx:key="id">
-    <view class="row">
+    <view class="row category-row">
       <view wx:if="{{editingId === item.id}}">
-        <input class="input" value="{{editingName}}" bindinput="onEditInput" />
+        <van-field value="{{editingName}}" bind:change="onEditInput" custom-class="van-field-soft edit-field" />
       </view>
-      <view wx:else class="section-title">{{item.name}}</view>
-      <view class="row actions">
-        <view wx:if="{{editingId === item.id}}" class="button-ghost" bindtap="saveEdit">保存</view>
-        <view wx:else class="button-ghost" data-id="{{item.id}}" data-name="{{item.name}}" bindtap="startEdit">编辑</view>
-        <view class="button-ghost" data-id="{{item.id}}" data-direction="up" bindtap="moveCategory">上移</view>
-        <view class="button-ghost" data-id="{{item.id}}" data-direction="down" bindtap="moveCategory">下移</view>
-        <view class="button-ghost" data-id="{{item.id}}" bindtap="removeCategory">删除</view>
+      <view wx:else class="section-title category-title">{{item.name}}</view>
+      <view class="actions-wrap actions-right">
+        <van-button
+          wx:if="{{editingId === item.id}}"
+          size="small"
+          type="primary"
+          icon="success"
+          custom-class="action-icon action-save"
+          bind:tap="saveEdit"
+        />
+        <van-button
+          wx:else
+          size="small"
+          type="default"
+          icon="edit"
+          custom-class="action-icon action-edit"
+          data-id="{{item.id}}"
+          data-name="{{item.name}}"
+          bind:tap="startEdit"
+        />
+        <van-button
+          size="small"
+          type="default"
+          icon="arrow-up"
+          custom-class="action-icon action-move"
+          data-id="{{item.id}}"
+          data-direction="up"
+          bind:tap="moveCategory"
+        />
+        <van-button
+          size="small"
+          type="default"
+          icon="arrow-down"
+          custom-class="action-icon action-move"
+          data-id="{{item.id}}"
+          data-direction="down"
+          bind:tap="moveCategory"
+        />
+        <van-button
+          size="small"
+          type="danger"
+          icon="delete"
+          custom-class="action-icon action-delete"
+          data-id="{{item.id}}"
+          bind:tap="removeCategory"
+        />
       </view>
     </view>
   </view>
 
   <view wx:if="{{lastDeleted}}" class="card undo-bar">
     <view>已删除分类：{{lastDeleted.name}}</view>
-    <view class="button-ghost" bindtap="undoDelete">撤销</view>
+    <van-button size="small" type="default" bind:tap="undoDelete">撤销</van-button>
   </view>
 </view>

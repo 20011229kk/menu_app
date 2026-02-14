@@ -122,3 +122,76 @@ page {
   background: linear-gradient(135deg, #ffe0ea, #ffd6c9);
   border-color: rgba(255, 173, 199, 0.8);
 }
+
+.van-field-soft {
+  border-radius: 16rpx;
+  background: #fff9fb;
+}
+
+.van-button {
+  border-radius: 999rpx;
+}
+
+.actions-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  align-items: center;
+}
+
+.actions-right {
+  margin-left: auto;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  max-width: 280rpx;
+  justify-content: flex-end;
+}
+
+.category-row .category-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.action-icon {
+  background: #f2f7ff;
+  border: 1rpx solid rgba(143, 184, 255, 0.45);
+  color: #4b6fa8;
+  padding: 4rpx 8rpx;
+  min-width: 60rpx;
+}
+
+.action-icon.action-delete {
+  background: #ffe6ee;
+  border-color: rgba(255, 170, 190, 0.6);
+  color: #b45b72;
+}
+
+.action-icon.action-save {
+  background: #e8f2ff;
+  border-color: rgba(143, 184, 255, 0.65);
+  color: #3c6aa8;
+}
+
+.edit-field {
+  border: 1rpx solid rgba(143, 184, 255, 0.9);
+  background: #eef5ff;
+  box-shadow: 0 10rpx 20rpx rgba(143, 184, 255, 0.25);
+}
+
+.van-button--primary {
+  background: linear-gradient(135deg, #8fb8ff, #a7d0ff);
+  border: none;
+  color: #ffffff;
+}
+
+.van-button--default {
+  background: #f2f7ff;
+  border: 1rpx solid rgba(143, 184, 255, 0.65);
+  color: #4b6fa8;
+}
+
+.van-button--danger {
+  background: #ffd6e0;
+  border: 1rpx solid rgba(255, 170, 190, 0.8);
+  color: #b45b72;
+}
