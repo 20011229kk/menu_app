@@ -19,8 +19,15 @@ function writeList(key, list) {
   wx.setStorageSync(key, JSON.stringify(list))
 }
 
+function clearLists() {
+  writeList(STORAGE_KEYS.categories, [])
+  writeList(STORAGE_KEYS.dishes, [])
+  writeList(STORAGE_KEYS.menus, [])
+}
+
 module.exports = {
   STORAGE_KEYS,
   readList,
-  writeList
+  writeList,
+  clearLists
 }

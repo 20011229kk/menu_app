@@ -1,6 +1,7 @@
 const { exportJson } = require('../../services/exportService')
 const { importJson } = require('../../services/importService')
 const { emit } = require('../../utils/events')
+const { clearLists } = require('../../utils/storage')
 const { showError } = require('../../utils/errors')
 const { chooseSingleImage, saveImage } = require('../../utils/files')
 const {
@@ -188,6 +189,21 @@ Page({
         throw new Error('生成邀请码失败')
       }
       this.setData({ inviteCode: res.code || '', coupleId: res.coupleId || '' })
+      if (hasCouple) {
+        const clear = await new Promise((resolve) => {
+          wx.showModal({
+            title: '是否清空本地数据',
+            content: '新共享空间已创建，是否清空本地数据并以新空间为准？',
+            confirmText: '清空',
+            cancelText: '保留',
+            success: (res) => resolve(res.confirm)
+          })
+        })
+        if (clear) {
+          clearLists()
+          emit('data:changed')
+        }
+      }
       wx.showToast({ title: '邀请码已生成', icon: 'success' })
     } catch (error) {
       showError(error, '生成邀请码失败')
