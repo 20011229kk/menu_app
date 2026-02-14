@@ -136,6 +136,16 @@ function scheduleSync() {
   }, 1200)
 }
 
+async function autoSyncIfEnabled() {
+  if (!getSyncEnabled()) return
+  if (!getCoupleId()) return
+  try {
+    await syncNow()
+  } catch (_) {
+    // ignore
+  }
+}
+
 async function ensureImageUploads(coupleId) {
   if (!wx.cloud || !coupleId) return
   const dishes = readList(STORAGE_KEYS.dishes)
@@ -180,5 +190,6 @@ module.exports = {
   createInvite,
   joinInvite,
   syncNow,
-  scheduleSync
+  scheduleSync,
+  autoSyncIfEnabled
 }

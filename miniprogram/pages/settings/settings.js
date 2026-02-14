@@ -155,6 +155,9 @@ Page({
     const enabled = !!event.detail.value
     setSyncEnabled(enabled)
     this.setData({ syncEnabled: enabled })
+    if (enabled && getCoupleId()) {
+      this.syncNow()
+    }
   },
 
   onJoinInput(event) {

@@ -1,5 +1,5 @@
 const { repairData } = require('./utils/repair')
-const { initCloud } = require('./utils/sync')
+const { initCloud, autoSyncIfEnabled } = require('./utils/sync')
 
 App({
   globalData: {
@@ -12,5 +12,6 @@ App({
     } catch (error) {
       // ignore repair failures to avoid blocking app start
     }
+    autoSyncIfEnabled()
   }
 })

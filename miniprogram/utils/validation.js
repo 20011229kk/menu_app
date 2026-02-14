@@ -6,7 +6,10 @@ function validateRequired(name, label) {
 
 function validateUnique(name, list, label, currentId) {
   const trimmed = String(name || '').trim()
-  const exists = list.find((item) => item.name === trimmed && item.id !== currentId)
+  const normalized = trimmed.toLowerCase()
+  const exists = list.find(
+    (item) => String(item.name || '').trim().toLowerCase() === normalized && item.id !== currentId
+  )
   if (exists) return `${label}已存在`
   return null
 }
