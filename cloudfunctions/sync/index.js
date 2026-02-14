@@ -30,6 +30,20 @@ async function pullUpdates(collection, coupleId, since) {
   })
 }
 
+async function upsertGallery(coupleId, gallery) {
+  if (!gallery || !gallery.updatedAt) return
+  const doc = await db.collection('couples').doc(coupleId).get()
+  const current = doc.data || {}
+  if (!current.galleryImageUpdatedAt || String(gallery.updatedAt) > String(current.galleryImageUpdatedAt)) {
+    await db.collection('couples').doc(coupleId).update({
+      data: {
+        galleryImageFileId: gallery.fileId || '',
+        galleryImageUpdatedAt: gallery.updatedAt || new Date().toISOString()
+      }
+    })
+  }
+}
+
 exports.main = async (event, context) => {
   const coupleId = event.coupleId
   if (!coupleId) {
@@ -40,10 +54,12 @@ exports.main = async (event, context) => {
   const categories = payload.categories || []
   const dishes = payload.dishes || []
   const menus = payload.menus || []
+  const gallery = payload.gallery || null
 
   await upsertCollection('categories', coupleId, categories)
   await upsertCollection('dishes', coupleId, dishes)
   await upsertCollection('menus', coupleId, menus)
+  await upsertGallery(coupleId, gallery)
 
   const since = event.lastSync || ''
   const [remoteCategories, remoteDishes, remoteMenus] = await Promise.all([
@@ -51,12 +67,25 @@ exports.main = async (event, context) => {
     pullUpdates('dishes', coupleId, since),
     pullUpdates('menus', coupleId, since)
   ])
+  let galleryMeta = null
+  try {
+    const coupleDoc = await db.collection('couples').doc(coupleId).get()
+    if (coupleDoc && coupleDoc.data) {
+      galleryMeta = {
+        fileId: coupleDoc.data.galleryImageFileId || '',
+        updatedAt: coupleDoc.data.galleryImageUpdatedAt || ''
+      }
+    }
+  } catch (error) {
+    // ignore gallery read failure
+  }
 
   return {
     ok: true,
     categories: remoteCategories,
     dishes: remoteDishes,
     menus: remoteMenus,
+    gallery: galleryMeta,
     serverTime: new Date().toISOString()
   }
 }

@@ -4,11 +4,15 @@ const { emit } = require('../../utils/events')
 const { clearLists } = require('../../utils/storage')
 const { showError } = require('../../utils/errors')
 const { chooseSingleImage, saveImage } = require('../../utils/files')
+const { uploadImage, getTempUrl } = require('../../utils/cloudFile')
+const { nowIso } = require('../../utils/time')
 const {
   getSyncEnabled,
   setSyncEnabled,
   getCoupleId,
   getLastSync,
+  getGalleryMeta,
+  setGalleryMeta,
   createInvite,
   joinInvite,
   syncNow
@@ -49,12 +53,24 @@ Page({
   },
 
   onShow() {
+    this.refreshView()
+  },
+
+  async refreshView() {
     const saved = wx.getStorageSync('menu_app_gallery_image')
     const syncEnabled = getSyncEnabled()
     const coupleId = getCoupleId()
     const lastSync = getLastSync()
+    let galleryImage = saved || ''
+    const galleryMeta = getGalleryMeta()
+    if (galleryMeta.fileId) {
+      const url = await getTempUrl(galleryMeta.fileId)
+      if (url) {
+        galleryImage = url
+      }
+    }
     this.setData({
-      galleryImage: saved || '',
+      galleryImage,
       syncEnabled,
       coupleId: coupleId || '',
       syncStatus: lastSync ? `上次同步：${lastSync}` : ''
@@ -177,8 +193,15 @@ Page({
   async chooseGalleryImage() {
     try {
       const tempPath = await chooseSingleImage()
+      let fileId = ''
+      if (getSyncEnabled() && getCoupleId()) {
+        fileId = await uploadImage(tempPath, getCoupleId(), 'gallery')
+      }
       const savedPath = await saveImage(tempPath)
       wx.setStorageSync('menu_app_gallery_image', savedPath)
+      if (fileId) {
+        setGalleryMeta(fileId, nowIso())
+      }
       this.setData({ galleryImage: savedPath })
     } catch (error) {
       showError(error, '选择图片失败')

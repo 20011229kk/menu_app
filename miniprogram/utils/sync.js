@@ -9,6 +9,11 @@ const SYNC_KEYS = {
   lastSync: 'menu_app_last_sync'
 }
 
+const GALLERY_KEYS = {
+  fileId: 'menu_app_gallery_image_file_id',
+  updatedAt: 'menu_app_gallery_image_updated_at'
+}
+
 let syncing = false
 let pending = false
 let timer = null
@@ -43,6 +48,22 @@ function getLastSync() {
 
 function setLastSync(value) {
   wx.setStorageSync(SYNC_KEYS.lastSync, value)
+}
+
+function getGalleryMeta() {
+  return {
+    fileId: wx.getStorageSync(GALLERY_KEYS.fileId) || '',
+    updatedAt: wx.getStorageSync(GALLERY_KEYS.updatedAt) || ''
+  }
+}
+
+function setGalleryMeta(fileId, updatedAt) {
+  if (fileId !== undefined) {
+    wx.setStorageSync(GALLERY_KEYS.fileId, fileId || '')
+  }
+  if (updatedAt !== undefined) {
+    wx.setStorageSync(GALLERY_KEYS.updatedAt, updatedAt || '')
+  }
 }
 
 async function callFunction(name, data) {
@@ -85,10 +106,12 @@ async function syncNow() {
   }
   syncing = true
   await ensureImageUploads(coupleId)
+  const galleryMeta = getGalleryMeta()
   const payload = {
     categories: readList(STORAGE_KEYS.categories),
     dishes: readList(STORAGE_KEYS.dishes),
-    menus: readList(STORAGE_KEYS.menus)
+    menus: readList(STORAGE_KEYS.menus),
+    gallery: galleryMeta.fileId || galleryMeta.updatedAt ? galleryMeta : null
   }
   const lastSync = getLastSync()
   const result = await callFunction('sync', {
@@ -106,6 +129,12 @@ async function syncNow() {
     }
     if (Array.isArray(result.menus)) {
       writeList(STORAGE_KEYS.menus, mergeList(payload.menus, result.menus))
+    }
+    if (result.gallery && result.gallery.updatedAt) {
+      const local = getGalleryMeta()
+      if (!local.updatedAt || String(result.gallery.updatedAt) > String(local.updatedAt)) {
+        setGalleryMeta(result.gallery.fileId || '', result.gallery.updatedAt || '')
+      }
     }
     repairData()
     setLastSync(result.serverTime || new Date().toISOString())
@@ -158,6 +187,8 @@ async function ensureImageUploads(coupleId) {
   if (!wx.cloud || !coupleId) return
   const dishes = readList(STORAGE_KEYS.dishes)
   const menus = readList(STORAGE_KEYS.menus)
+  const galleryPath = wx.getStorageSync('menu_app_gallery_image')
+  const galleryMeta = getGalleryMeta()
   let dishesChanged = false
   let menusChanged = false
 
@@ -185,6 +216,13 @@ async function ensureImageUploads(coupleId) {
   if (menusChanged) {
     writeList(STORAGE_KEYS.menus, menus)
   }
+
+  if (galleryPath && !galleryMeta.fileId) {
+    const fileId = await uploadImage(galleryPath, coupleId, 'gallery')
+    if (fileId) {
+      setGalleryMeta(fileId, nowIso())
+    }
+  }
 }
 
 module.exports = {
@@ -195,6 +233,8 @@ module.exports = {
   setCoupleId,
   getLastSync,
   setLastSync,
+  getGalleryMeta,
+  setGalleryMeta,
   createInvite,
   joinInvite,
   syncNow,
