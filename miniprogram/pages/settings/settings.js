@@ -73,7 +73,7 @@ Page({
       galleryImage,
       syncEnabled,
       coupleId: coupleId || '',
-      syncStatus: lastSync ? `上次同步：${lastSync}` : ''
+      syncStatus: lastSync ? `上次同步：${formatDateCN(lastSync)}` : ''
     })
   },
 
@@ -305,7 +305,7 @@ Page({
       const res = await syncNow()
       if (res && res.ok) {
         emit('data:changed')
-        this.setData({ syncStatus: `上次同步：${res.serverTime}` })
+        this.setData({ syncStatus: `上次同步：${formatDateCN(res.serverTime)}` })
         wx.showToast({ title: '同步完成', icon: 'success' })
       } else if (res && res.message) {
         throw new Error(res.message)
@@ -317,3 +317,12 @@ Page({
     }
   }
 })
+
+function formatDateCN(value) {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return value
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
