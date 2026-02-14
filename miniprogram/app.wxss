@@ -179,9 +179,9 @@ page {
 }
 
 .van-button--primary {
-  background: linear-gradient(135deg, #8fb8ff, #a7d0ff);
-  border: none;
-  color: #ffffff;
+  background: linear-gradient(135deg, #ffe0ea, #ffd6c9) !important;
+  border: none !important;
+  color: #b04b67 !important;
 }
 
 .van-button--default {
