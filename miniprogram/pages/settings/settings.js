@@ -136,6 +136,19 @@ Page({
   },
 
   importData() {
+    wx.showModal({
+      title: '确认导入',
+      content: '导入会覆盖当前本地数据，建议先导出备份。',
+      confirmText: '继续导入',
+      cancelText: '取消',
+      success: (res) => {
+        if (!res.confirm) return
+        this.performImport()
+      }
+    })
+  },
+
+  performImport() {
     wx.chooseMessageFile({
       count: 1,
       type: 'file',
