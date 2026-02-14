@@ -12,15 +12,15 @@
   ],
   "window": {
     "navigationBarTitleText": "菜单/菜谱管理",
-    "navigationBarBackgroundColor": "#f3e0c5",
+    "navigationBarBackgroundColor": "#ffe1ea",
     "navigationBarTextStyle": "black",
     "backgroundTextStyle": "light",
-    "backgroundColor": "#f7f2ea"
+    "backgroundColor": "#fff5f7"
   },
   "tabBar": {
-    "color": "#7a6a55",
-    "selectedColor": "#3b2c1a",
-    "backgroundColor": "#ffffff",
+    "color": "#9a7b7b",
+    "selectedColor": "#c24f6a",
+    "backgroundColor": "#fff9fb",
     "borderStyle": "black",
     "list": [
       {

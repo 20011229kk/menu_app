@@ -1,6 +1,6 @@
 page {
-  background: #f7f2ea;
-  color: #1f1c16;
+  background: linear-gradient(180deg, #fff5f7 0%, #fff1ea 45%, #fef8f2 100%);
+  color: #3a2a2a;
   font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
@@ -9,11 +9,11 @@ page {
 }
 
 .card {
-  background: #fff;
-  border: 1rpx solid #efe1cc;
+  background: linear-gradient(180deg, #ffffff 0%, #fff9fb 100%);
+  border: 1rpx solid rgba(255, 186, 205, 0.55);
   border-radius: 24rpx;
   padding: 24rpx;
-  box-shadow: 0 14rpx 28rpx rgba(80, 50, 20, 0.08);
+  box-shadow: 0 18rpx 36rpx rgba(255, 126, 160, 0.18);
   margin-bottom: 20rpx;
 }
 
@@ -25,29 +25,29 @@ page {
 }
 
 .muted {
-  color: #7a6a55;
+  color: #8c6f6f;
   font-size: 26rpx;
   line-height: 1.6;
 }
 
 .button-primary {
-  background: #3b2c1a;
+  background: linear-gradient(135deg, #ff7aa2, #ffb07c);
   color: #fff;
   border-radius: 999rpx;
   padding: 14rpx 28rpx;
   font-weight: 600;
   display: inline-block;
   margin-top: 12rpx;
-  box-shadow: 0 8rpx 16rpx rgba(59, 44, 26, 0.2);
+  box-shadow: 0 10rpx 20rpx rgba(255, 122, 162, 0.3);
 }
 
 .button-ghost {
-  border: 1rpx solid #e3d3bc;
-  color: #3b2c1a;
+  border: 1rpx solid rgba(255, 173, 199, 0.7);
+  color: #b04b67;
   border-radius: 999rpx;
   padding: 10rpx 22rpx;
   display: inline-block;
-  background: #fffaf2;
+  background: #fff3f7;
 }
 
 .button-ghost + .button-ghost,
@@ -57,10 +57,10 @@ page {
 }
 
 .input {
-  border: 1rpx solid #e3d3bc;
+  border: 1rpx solid rgba(255, 173, 199, 0.7);
   border-radius: 16rpx;
   padding: 16rpx 20rpx;
-  background: #fffaf2;
+  background: #fff9fb;
   margin-top: 12rpx;
 }
 
@@ -81,23 +81,23 @@ page {
 .badge {
   padding: 4rpx 12rpx;
   border-radius: 999rpx;
-  background: #f1d7a6;
-  color: #3b2c1a;
+  background: #ffe3ea;
+  color: #b04b67;
   font-size: 22rpx;
 }
 
 .empty-card {
-  border: 1rpx dashed #e3d3bc;
-  background: #fffaf2;
+  border: 1rpx dashed rgba(255, 173, 199, 0.7);
+  background: #fff7fa;
 }
 
 .undo-bar {
-  border: 1rpx dashed #d9b889;
-  background: #fff4e1;
+  border: 1rpx dashed #f5b8c7;
+  background: #fff0f4;
 }
 
 .error {
-  color: #8f2a2a;
+  color: #c14a5f;
   font-size: 24rpx;
   margin-top: 12rpx;
 }
@@ -111,14 +111,14 @@ page {
 .segmented-button {
   flex: 1;
   text-align: center;
-  border: 1rpx solid #e3d3bc;
+  border: 1rpx solid rgba(255, 173, 199, 0.7);
   padding: 16rpx 0;
   border-radius: 999rpx;
-  background: #fff;
+  background: #fff9fb;
   font-weight: 600;
 }
 
 .segmented-active {
-  background: #f3e0c5;
-  border-color: #d6b98b;
+  background: linear-gradient(135deg, #ffe0ea, #ffd6c9);
+  border-color: rgba(255, 173, 199, 0.8);
 }

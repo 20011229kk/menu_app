@@ -1,7 +1,8 @@
 .thumb {
   width: 120rpx;
   height: 120rpx;
-  border-radius: 16rpx;
+  border-radius: 20rpx;
   margin-right: 16rpx;
-  border: 1rpx solid #efe1cc;
+  border: 1rpx solid rgba(255, 173, 199, 0.7);
+  box-shadow: 0 8rpx 18rpx rgba(255, 130, 170, 0.18);
 }
