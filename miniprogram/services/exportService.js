@@ -13,7 +13,18 @@ function readImageBase64(path) {
   }
 }
 
-function buildExportPayload() {
+async function readCloudImageBase64(fileId) {
+  if (!fileId || !wx.cloud) return null
+  try {
+    const res = await wx.cloud.downloadFile({ fileID: fileId })
+    const tempPath = res && res.tempFilePath
+    return readImageBase64(tempPath)
+  } catch (error) {
+    return null
+  }
+}
+
+async function buildExportPayload() {
   const categories = readList(STORAGE_KEYS.categories).filter((item) => !item.deletedAt)
   const dishes = readList(STORAGE_KEYS.dishes).filter((item) => !item.deletedAt)
   const menus = readList(STORAGE_KEYS.menus).filter((item) => !item.deletedAt)
@@ -23,19 +34,31 @@ function buildExportPayload() {
     gallery: null
   }
 
-  dishes.forEach((dish) => {
-    const entry = readImageBase64(dish.coverImage)
+  for (const dish of dishes) {
+    let entry = null
+    if (dish.coverImageFileId) {
+      entry = await readCloudImageBase64(dish.coverImageFileId)
+    }
+    if (!entry) {
+      entry = readImageBase64(dish.coverImage)
+    }
     if (entry) {
       images.dishes[dish.id] = entry
     }
-  })
+  }
 
-  menus.forEach((menu) => {
-    const entry = readImageBase64(menu.coverImage)
+  for (const menu of menus) {
+    let entry = null
+    if (menu.coverImageFileId) {
+      entry = await readCloudImageBase64(menu.coverImageFileId)
+    }
+    if (!entry) {
+      entry = readImageBase64(menu.coverImage)
+    }
     if (entry) {
       images.menus[menu.id] = entry
     }
-  })
+  }
 
   const galleryPath = wx.getStorageSync('menu_app_gallery_image')
   const galleryEntry = readImageBase64(galleryPath)
@@ -54,7 +77,7 @@ function buildExportPayload() {
 }
 
 async function exportJson() {
-  const payload = buildExportPayload()
+  const payload = await buildExportPayload()
   return JSON.stringify(payload, null, 2)
 }
 
