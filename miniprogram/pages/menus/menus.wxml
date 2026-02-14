@@ -1,7 +1,7 @@
 <view class="container">
   <view class="card">
-    <view class="section-title">菜单</view>
-    <view class="muted">创建一组菜品并设置顺序</view>
+    <view class="section-title">约会菜单 ✨</view>
+    <view class="muted">把一餐一饭编排成小小仪式</view>
   </view>
 
   <view class="card">

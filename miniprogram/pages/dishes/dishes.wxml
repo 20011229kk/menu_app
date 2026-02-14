@@ -1,7 +1,7 @@
 <view class="container">
   <view class="card">
-    <view class="section-title">菜品</view>
-    <view class="muted">搜索、筛选与排序</view>
+    <view class="section-title">恋人菜谱 🥣</view>
+    <view class="muted">搜一搜、挑一挑，灵感更轻松</view>
   </view>
 
   <view class="card">

@@ -1,7 +1,7 @@
 <view class="container">
   <view class="card">
-    <view class="section-title">首页</view>
-    <view class="muted">分类概览与最近更新视图</view>
+    <view class="section-title">今日小厨房 🍓</view>
+    <view class="muted">温馨整理与最近更新一眼可见</view>
   </view>
 
   <view class="segmented">
