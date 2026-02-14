@@ -23,8 +23,7 @@ Page({
     inviteCode: '',
     joinCode: '',
     syncStatus: '',
-    shareExpanded: false,
-    advancedExpanded: false
+    activePanels: []
   },
 
   onLoad() {
@@ -62,12 +61,8 @@ Page({
     })
   },
 
-  toggleSharePanel() {
-    this.setData({ shareExpanded: !this.data.shareExpanded })
-  },
-
-  toggleAdvancedPanel() {
-    this.setData({ advancedExpanded: !this.data.advancedExpanded })
+  onCollapseChange(event) {
+    this.setData({ activePanels: event.detail })
   },
 
   async exportData() {
@@ -191,7 +186,8 @@ Page({
   },
 
   toggleSync(event) {
-    const enabled = !!event.detail.value
+    const detail = event.detail
+    const enabled = !!(detail && detail.value !== undefined ? detail.value : detail)
     setSyncEnabled(enabled)
     this.setData({ syncEnabled: enabled })
     if (enabled && getCoupleId()) {
@@ -200,7 +196,8 @@ Page({
   },
 
   onJoinInput(event) {
-    this.setData({ joinCode: event.detail.value })
+    const value = event.detail && event.detail.value !== undefined ? event.detail.value : event.detail
+    this.setData({ joinCode: value })
   },
 
   async createInviteCode() {
